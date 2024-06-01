@@ -30,8 +30,8 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:text="ACCOUNT | EDIT"
+        android:layout_marginTop="80dp"
+        android:text="ACCOUNT"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.052"
@@ -39,47 +39,79 @@
         app:layout_constraintTop_toBottomOf="@+id/txtWelcomeBack" />
 
     <TextView
-        android:id="@+id/textView6"
-        android:layout_width="409dp"
-        android:layout_height="219dp"
-        android:layout_marginTop="16dp"
+        android:id="@+id/txtAccountBG"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="9dp"
+        android:background="@color/secondary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/txtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
         android:text="name"
-        app:layout_constraintBottom_toBottomOf="@+id/textView6"
-        app:layout_constraintEnd_toStartOf="@+id/textView8"
-        app:layout_constraintHorizontal_bias="0.288"
+        app:layout_constraintBottom_toBottomOf="@+id/txtAccountBG"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.145" />
+        app:layout_constraintTop_toTopOf="@+id/txtAccountBG"
+        app:layout_constraintVertical_bias="0.075" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/txtSurname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="104dp"
+        android:layout_marginEnd="100dp"
         android:text="surname"
-        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+        app:layout_constraintBottom_toBottomOf="@+id/txtAccountBG"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.169" />
+        app:layout_constraintTop_toTopOf="@+id/txtAccountBG"
+        app:layout_constraintVertical_bias="0.075" />
 
     <Button
         android:id="@+id/btn_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:backgroundTint="?android:attr/colorActivatedHighlight"
-        android:text="Edit"
-        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/primaryOrange"
+        android:text="EDIT"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtBirthDate" />
+
+    <TextView
+        android:id="@+id/txtBirthDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="07.11.2002"
+        app:layout_constraintEnd_toEndOf="@+id/txtName"
+        app:layout_constraintStart_toStartOf="@+id/txtName"
+        app:layout_constraintTop_toBottomOf="@+id/txtName" />
+
+    <TextView
+        android:id="@+id/txtSex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Male"
+        app:layout_constraintEnd_toEndOf="@+id/txtSurname"
+        app:layout_constraintStart_toStartOf="@+id/txtSurname"
+        app:layout_constraintTop_toBottomOf="@+id/txtSurname" />
+
+    <ImageView
+        android:id="@+id/imgProfile"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/textView5"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
