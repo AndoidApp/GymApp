@@ -47,6 +47,9 @@ android {
 dependencies {
     
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.fragment.ktx)
     val lifecycleVersion = "2.7.0"
     val activityVersion = "1.8.2"
     implementation("androidx.core:core-ktx:1.12.0")

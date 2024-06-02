@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.Navigation
 import com.example.gymapp.databinding.FragmentAccountBinding
 
@@ -36,7 +37,9 @@ class AccountFragment : Fragment() {
 
         val navController = Navigation.findNavController(view)
         binding.btnEditAccountSubmit.setOnClickListener {
-            navController.navigate(R.id.action_accountFragment_to_mainActivity)
+            // TODO : actually update account
+            Toast.makeText(view.context, "Account updated!", Toast.LENGTH_LONG).show()
+            navController.navigate(R.id.action_accountFragment_to_homeFragment)
         }
     }
 }
