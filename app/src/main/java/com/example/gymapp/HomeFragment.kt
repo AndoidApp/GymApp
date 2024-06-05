@@ -39,11 +39,11 @@ class HomeFragment : Fragment() {
 
 
         /* SHOW USER INFO */
-        binding.txtWelcomeBack.text = resources.getString(R.string.welcome_message, viewModel.userPersonalData.name)
-        binding.txtName.text = viewModel.userPersonalData.name
-        binding.txtSurname.text = viewModel.userPersonalData.surname
-        binding.txtBirthDate.text = viewModel.userPersonalData.birthDate
-        binding.txtSex.text = viewModel.userPersonalData.sex.displayName
+        binding.homeTxtWelcomeBack.text = resources.getString(R.string.welcome_message, viewModel.userPersonalData.name)
+        binding.homeTxtName.text = viewModel.userPersonalData.name
+        binding.homeTxtSurname.text = viewModel.userPersonalData.surname
+        binding.homeTxtBirthDate.text = viewModel.userPersonalData.birthDate
+        binding.homeTxtSex.text = viewModel.userPersonalData.sex.displayName
 
 
 
@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
 
 
         /* BUTTONS */
-        binding.btnEdit.setOnClickListener {
+        binding.homeBtnEdit.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_accountFragment)
         }
 

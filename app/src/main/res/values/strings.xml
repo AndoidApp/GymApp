@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">GymApp</string>
-    <string name="login">Login</string>
+    <string name="login">LOGIN</string>
     <string name="gym_app">GYM APP</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_message">Welcome back, %1$s!</string>
+    <string name="welcome_warning_desc">Account required</string>
+    <string name="warning">WARNING</string>
 </resources>

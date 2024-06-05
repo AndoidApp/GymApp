@@ -36,7 +36,7 @@ class AccountFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val navController = Navigation.findNavController(view)
-        binding.btnEditAccountSubmit.setOnClickListener {
+        binding.editAccountBtnSubmit.setOnClickListener {
             // TODO : actually update account
             Toast.makeText(view.context, "Account updated!", Toast.LENGTH_LONG).show()
             navController.navigate(R.id.action_accountFragment_to_homeFragment)

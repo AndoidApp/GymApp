@@ -8,13 +8,11 @@
     tools:context=".login.WelcomeActivity">
 
     <TextView
-        android:id="@+id/TextView01"
+        android:id="@+id/welcomeTxtViewBG"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="100dp"
         android:layout_marginTop="128dp"
         android:background="#FFF3CD"
-        android:paddingStart="40dp"
-        android:text="WARNING"
         android:textAlignment="viewStart"
         android:textAllCaps="true"
         android:textColor="#6A5007"
@@ -28,20 +26,20 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/welcomeTxtWarningDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Account required"
+        android:layout_marginStart="30dp"
+        android:text="@string/welcome_warning_desc"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/TextView01"
-        app:layout_constraintEnd_toEndOf="@+id/TextView01"
-        app:layout_constraintHorizontal_bias="0.776"
-        app:layout_constraintStart_toStartOf="@+id/TextView01"
-        app:layout_constraintTop_toTopOf="@+id/TextView01"
-        app:layout_constraintVertical_bias="0.476" />
+        app:layout_constraintBottom_toBottomOf="@+id/welcomeTxtViewBG"
+        app:layout_constraintEnd_toEndOf="@+id/welcomeTxtViewBG"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/welcomeTxtWarning"
+        app:layout_constraintTop_toTopOf="@+id/welcomeTxtViewBG" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/welcomeTxtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -60,7 +58,7 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/welcomeTxtTitle" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -80,7 +78,7 @@
         android:backgroundTint="#000000"
         android:paddingStart="30sp"
         android:paddingEnd="30sp"
-        android:text="LOGIN"
+        android:text="@string/login"
         android:textColor="#EA9022"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -88,6 +86,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.072" />
+        app:layout_constraintVertical_bias="0.55" />
+
+    <TextView
+        android:id="@+id/welcomeTxtWarning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/warning"
+        android:textAllCaps="true"
+        android:textColor="#6A5007"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/welcomeTxtViewBG"
+        app:layout_constraintEnd_toEndOf="@+id/welcomeTxtViewBG"
+        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintStart_toStartOf="@+id/welcomeTxtViewBG"
+        app:layout_constraintTop_toTopOf="@+id/welcomeTxtViewBG" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
