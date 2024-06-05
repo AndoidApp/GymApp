@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.navigation.Navigation
 import com.example.gymapp.databinding.FragmentHomeBinding
 
@@ -38,6 +39,21 @@ class HomeFragment : Fragment() {
         val navController = Navigation.findNavController(view)
         binding.btnEdit.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_accountFragment)
+        }
+
+        binding.Test1.setOnClickListener {
+            navController.navigate(R.id.action_homeFragment_to_trainingFragment)
+
+
+
+
+
+
+
+
+
+
+
         }
     }
 }
