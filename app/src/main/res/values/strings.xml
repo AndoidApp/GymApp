@@ -4,4 +4,5 @@
     <string name="gym_app">GYM APP</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_message">Welcome back, %1$s!</string>
 </resources>
