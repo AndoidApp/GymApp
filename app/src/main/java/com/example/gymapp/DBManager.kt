@@ -6,14 +6,14 @@ enum class Sex(val displayName: String) {
 
 data class DBPersonalData(val name: String = DEFAULT_NAME,
                           val username: String = DEFAULT_USERNAME,
-                          val birthDate: String = DEFAULT_BIRTHDATE,
+                          val dateBirth: String = DEFAULT_BIRTHDATE,
                           val sex: Sex = DEFAULT_SEX) {
 
     /* DEFAULT VALUES */
     companion object {
         const val DEFAULT_NAME = ""
         const val DEFAULT_USERNAME = ""
-        const val DEFAULT_BIRTHDATE = "1970-1-1"
+        const val DEFAULT_BIRTHDATE = ""
         val DEFAULT_SEX = Sex.MALE
     }
 
@@ -21,7 +21,7 @@ data class DBPersonalData(val name: String = DEFAULT_NAME,
         return hashMapOf(
             "name" to name,
             "username" to username,
-            "dateBirth" to birthDate,
+            "dateBirth" to dateBirth,
             "sex" to sex.displayName
         )
     }

@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
                 binding.homeTxtWelcomeBack to txtWelcome,
                 binding.homeTxtName to viewModel.userPersonalData.value?.name,
                 binding.homeTxtUsername to viewModel.userPersonalData.value?.username,
-                binding.homeTxtBirthDate to viewModel.userPersonalData.value?.birthDate,
+                binding.homeTxtBirthDate to viewModel.userPersonalData.value?.dateBirth,
                 binding.homeTxtSex to viewModel.userPersonalData.value?.sex?.displayName
             )) {
                 pair.first.text = pair.second
