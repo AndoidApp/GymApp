@@ -1,19 +1,30 @@
 package com.example.gymapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.example.gymapp.databinding.FragmentHomeBinding
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 
 class HomeFragment : Fragment() {
 
     companion object {
         fun newInstance() = HomeFragment()
+        const val TAG = "MainActivity"
     }
+
+    /* DB */
+    private lateinit var db: FirebaseFirestore
+    private lateinit var firebaseAuth: FirebaseAuth
 
     private lateinit var binding : FragmentHomeBinding
     private val viewModel: GymViewModel by activityViewModels()
@@ -34,20 +45,36 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val navController = Navigation.findNavController(view)
 
 
         /* SHOW USER INFO */
-        binding.homeTxtWelcomeBack.text = resources.getString(R.string.welcome_message, viewModel.userPersonalData.name)
-        binding.homeTxtName.text = viewModel.userPersonalData.name
-        binding.homeTxtSurname.text = viewModel.userPersonalData.surname
-        binding.homeTxtBirthDate.text = viewModel.userPersonalData.birthDate
-        binding.homeTxtSex.text = viewModel.userPersonalData.sex.displayName
+        viewModel.userPersonalData.observe(viewLifecycleOwner, Observer {
+            val txtWelcome = resources.getString(R.string.welcome_message,
+                if ((viewModel.userPersonalData.value?.username ?: "") != "")
+                    viewModel.userPersonalData.value?.username
+                else viewModel.userPersonalData.value?.name)
+
+            for (pair in arrayOf(
+                binding.homeTxtWelcomeBack to txtWelcome,
+                binding.homeTxtName to viewModel.userPersonalData.value?.name,
+                binding.homeTxtUsername to viewModel.userPersonalData.value?.username,
+                binding.homeTxtBirthDate to viewModel.userPersonalData.value?.birthDate,
+                binding.homeTxtSex to viewModel.userPersonalData.value?.sex?.displayName
+            )) {
+                pair.first.text = pair.second
+            }
+        })
+
+
 
 
 
         /* SHOW USER's TRAINING PLANS */
+        // TODO => similar to previous observer
+
+
+
 
 
 

@@ -1,14 +1,26 @@
 package com.example.gymapp
 
 enum class Sex(val displayName: String) {
-    MALE("male"), FEMALE("female")
+    MALE("MALE"), FEMALE("FEMALE")
 }
 
-data class DBPersonalData(val name: String, val surname: String, val birthDate: String, val sex: Sex) {
+data class DBPersonalData(val name: String = DEFAULT_NAME,
+                          val username: String = DEFAULT_USERNAME,
+                          val birthDate: String = DEFAULT_BIRTHDATE,
+                          val sex: Sex = DEFAULT_SEX) {
+
+    /* DEFAULT VALUES */
+    companion object {
+        const val DEFAULT_NAME = ""
+        const val DEFAULT_USERNAME = ""
+        const val DEFAULT_BIRTHDATE = "1970-1-1"
+        val DEFAULT_SEX = Sex.MALE
+    }
+
     fun getHashMap(): HashMap<String, String> {
         return hashMapOf(
             "name" to name,
-            "surname" to surname,
+            "username" to username,
             "dateBirth" to birthDate,
             "sex" to sex.displayName
         )
@@ -16,7 +28,6 @@ data class DBPersonalData(val name: String, val surname: String, val birthDate: 
 }
 
 class DBManager {
-
     companion object {
         const val PERSONAL_DATA_DOCUMENT_NAME = "personal_data"
     }
