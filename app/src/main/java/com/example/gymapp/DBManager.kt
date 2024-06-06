@@ -2,7 +2,6 @@ package com.example.gymapp
 
 enum class Sex(val displayName: String) {
     MALE("male"), FEMALE("female")
-
 }
 
 data class DBPersonalData(val name: String, val surname: String, val birthDate: String, val sex: Sex) {
