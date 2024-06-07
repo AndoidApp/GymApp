@@ -1,19 +1,31 @@
 package com.example.gymapp
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.example.gymapp.databinding.FragmentHomeBinding
 import com.example.gymapp.login.WelcomeActivity
 import com.firebase.ui.auth.AuthUI
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropSquareTransformation
+import java.util.Calendar
+
 
 class HomeFragment : Fragment() {
 
@@ -23,6 +35,9 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding : FragmentHomeBinding
     private val viewModel: GymViewModel by activityViewModels()
+    private lateinit var picker : MaterialTimePicker
+    private lateinit var calendar : Calendar
+    private var alarmManager : AlarmManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +69,10 @@ class HomeFragment : Fragment() {
                     val intent = Intent(requireContext(), WelcomeActivity::class.java)
                     startActivity(intent)
                 }
+        }
+
+        binding.homeBtnTrainingReminder.setOnClickListener {
+            showTimerPicker()
         }
 
         /* NAVIGATION */
@@ -109,5 +128,41 @@ class HomeFragment : Fragment() {
                 .placeholder(R.drawable.avatar_default)
                 .into(binding.imgProfile)
         }
+    }
+
+    /**
+     *
+     */
+    private fun showTimerPicker() {
+        calendar = Calendar.getInstance()
+        picker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setHour(calendar.get(Calendar.HOUR))
+            .setMinute(calendar.get(Calendar.MINUTE))
+            .setTitleText("Select alarm time")
+            .build()
+        picker.show(parentFragmentManager, "gym_app")
+        /* picker.addOnPositiveButtonClickListener {
+            Log.d(MainActivity.TAG, "OnPositive")
+        } */
+        picker.addOnPositiveButtonClickListener {
+            setAlarm()
+        }
+    }
+
+    private fun setAlarm() {
+        calendar = Calendar.getInstance()
+        val intent = Intent(requireContext(), AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        alarmManager = requireContext().getSystemService(ALARM_SERVICE) as AlarmManager
+        alarmManager!!.setRepeating(
+            AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY, pendingIntent
+        )
+        Toast.makeText(requireContext(), "Alarm set successfully", Toast.LENGTH_SHORT).show()
+
+        // TODO => show time set (where do u set alarm time!!)
+        binding.homeBtnTrainingReminder.text = "(${calendar.get(Calendar.HOUR)}:${calendar.get(Calendar.MINUTE)}) CANCEL ${calendar.time}}"
     }
 }
