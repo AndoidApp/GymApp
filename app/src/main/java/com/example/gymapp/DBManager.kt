@@ -15,10 +15,22 @@ data class DBPersonalData(val name: String, val surname: String, val birthDate: 
     }
 }
 
+data class DBTrainingPlan(var exercise: MutableList<String> = mutableListOf(), var set_number: MutableList<Int> = mutableListOf(),
+                          var reps: MutableList<Int> = mutableListOf(), var weight: MutableList<Int> = mutableListOf()){
+    fun getHashMapTraining(): HashMap<String, List<Any>> {
+        return hashMapOf(
+        "Exercise" to exercise,
+        "Set" to set_number,
+        "Reps" to reps,
+        "Weight" to weight)
+    }
+}
+
 class DBManager {
 
     companion object {
         const val PERSONAL_DATA_DOCUMENT_NAME = "personal_data"
+        const val TRAINING_DATA_DOCUMENT_NAME = "training Plans"
     }
 
 }

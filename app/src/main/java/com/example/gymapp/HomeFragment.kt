@@ -59,6 +59,12 @@ class HomeFragment : Fragment() {
         }
 
         binding.Test1.setOnClickListener {
+            viewModel.viewTraining = true
+            navController.navigate(R.id.action_homeFragment_to_trainingFragment)
+        }
+
+        binding.btnAdd.setOnClickListener {
+            viewModel.viewTraining = false
             navController.navigate(R.id.action_homeFragment_to_trainingFragment)
         }
     }
