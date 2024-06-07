@@ -162,7 +162,7 @@ class HomeFragment : Fragment() {
         )
         Toast.makeText(requireContext(), "Alarm set successfully", Toast.LENGTH_SHORT).show()
 
-        // TODO => show time set (where do u set alarm time!!)
+        // TODO => set correct time and show it
         binding.homeBtnTrainingReminder.text = "(${calendar.get(Calendar.HOUR)}:${calendar.get(Calendar.MINUTE)}) CANCEL ${calendar.time}}"
     }
 }
