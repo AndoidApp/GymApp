@@ -45,7 +45,7 @@ android {
 }
 
 dependencies {
-    
+
     implementation(libs.androidx.activity)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.lifecycle.livedata.ktx)
@@ -77,10 +77,16 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
 
     //for authentication
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
     //if you target Android 12
     implementation("com.google.android.gms:play-services-auth:20.0.1")
+
+    // Picasso
+    implementation("com.squareup.picasso:picasso:2.71828")
+    implementation("jp.wasabeef:picasso-transformations:2.4.0")
+    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
 
 }

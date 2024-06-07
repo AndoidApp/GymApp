@@ -3,7 +3,9 @@
     <string name="login">LOGIN</string>
     <string name="gym_app">GYM APP</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="welcome_message">Welcome back, %1$s!</string>
+    <string name="welcome_message">WELCOME BACK</string>
+    <string name="welcome_message_custom">WELCOME BACK, %1$s!</string>
+    <string name="dateBirth">%1$s-%2$s-%3$s</string>
     <string name="welcome_warning_desc">Account required</string>
     <string name="warning">WARNING</string>
 </resources>

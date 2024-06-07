@@ -1,6 +1,7 @@
 package com.example.gymapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,12 +16,11 @@ import com.google.firebase.firestore.firestore
 
 class MainActivity : AppCompatActivity() {
 
-    /* DB */
-    private lateinit var db: FirebaseFirestore
-    private lateinit var firebaseAuth: FirebaseAuth
+    companion object {
+        const val TAG = "MainActivity"
+    }
 
     private lateinit var binding : ActivityMainBinding
-    private val viewModel: GymViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,19 +33,5 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        db = Firebase.firestore
-        firebaseAuth = FirebaseAuth.getInstance()
-
-
-        /* TODO : look for a good way to save birthDate: Date */
-        val personalData = DBPersonalData("Pippo","Pluto", "2002-11-07", Sex.MALE)
-        db.collection(firebaseAuth.currentUser!!.uid)
-            .document(DBManager.PERSONAL_DATA_DOCUMENT_NAME)
-            .set(personalData.getHashMap())
-
-        /* TODO : look on db for user info
-        *   & get personalData: DBPersonalData */
-        viewModel.userPersonalData = personalData
     }
 }
