@@ -30,12 +30,24 @@ data class DBPersonalData(val name: String = DEFAULT_NAME,
     }
 }
 
+data class DBTrainingPlan(var exercise: MutableList<String> = mutableListOf(), var set_number: MutableList<Int> = mutableListOf(),
+                          var reps: MutableList<Int> = mutableListOf(), var weight: MutableList<Int> = mutableListOf()){
+    fun getHashMapTraining(): HashMap<String, List<Any>> {
+        return hashMapOf(
+        "Exercise" to exercise,
+        "Set" to set_number,
+        "Reps" to reps,
+        "Weight" to weight)
+    }
+}
+
 /**
  * Define documents names on Firebase
  */
 class DBManager {
     companion object {
         const val PERSONAL_DATA_DOCUMENT_NAME = "personal_data"
+        const val TRAINING_DATA_DOCUMENT_NAME = "training Plans"
     }
 
 }

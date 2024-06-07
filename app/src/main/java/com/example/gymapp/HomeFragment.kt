@@ -65,6 +65,15 @@ class HomeFragment : Fragment() {
         binding.homeBtnEdit.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_accountFragment)
         }
+        
+        binding.Test1.setOnClickListener {
+            viewModel.viewTraining = true
+            navController.navigate(R.id.action_homeFragment_to_trainingFragment)
+        }
+
+        binding.btnAdd.setOnClickListener {
+            viewModel.viewTraining = false
+            navController.navigate(R.id.action_homeFragment_to_trainingFragment)
     }
 
     /**
