@@ -1,5 +1,6 @@
 package com.example.gymapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +11,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.example.gymapp.databinding.FragmentHomeBinding
+import com.example.gymapp.login.WelcomeActivity
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -81,6 +84,15 @@ class HomeFragment : Fragment() {
 
 
         /* BUTTONS */
+        binding.homeBtnSignOut.setOnClickListener {
+            AuthUI.getInstance()
+                .signOut(requireContext())
+                .addOnCompleteListener {
+                    val intent = Intent(requireContext(), WelcomeActivity::class.java)
+                    startActivity(intent)
+                }
+        }
+
         binding.homeBtnEdit.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_accountFragment)
         }

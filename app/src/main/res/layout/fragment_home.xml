@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Welcome back, {gymbro}"
+        android:text="WELCOME BACK"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
         android:hint="name"
+        android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_1"
@@ -76,6 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="56dp"
         android:hint="username"
+        android:textAlignment="textEnd"
         app:layout_constraintBottom_toBottomOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_1"
@@ -88,6 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="dd-mm-yyyy"
+        android:textAlignment="viewStart"
         app:layout_constraintEnd_toEndOf="@+id/homeTxtName"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/homeTxtName"
@@ -99,6 +102,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="sex"
+        android:textAlignment="textEnd"
         app:layout_constraintEnd_toEndOf="@+id/homeTxtUsername"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/homeTxtUsername"
@@ -179,5 +183,15 @@
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeTxtAccountBG_1" />
+
+    <Button
+        android:id="@+id/homeBtnSignOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Sign out"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgProfile"
+        app:layout_constraintTop_toBottomOf="@+id/homeTxtWelcomeBack" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

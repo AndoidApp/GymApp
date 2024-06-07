@@ -55,7 +55,6 @@ class WelcomeActivity : AppCompatActivity() {
 
                 // TODO => set viewmodel here (efficiency), not in mainActivity, there is another DB query there :(
 
-
                 // Start MainActivity
                 val intentMainActivity = Intent(this, MainActivity::class.java)
                 intentMainActivity.putExtra("user", user)
@@ -66,30 +65,55 @@ class WelcomeActivity : AppCompatActivity() {
                 Log.e("FirebaseAuth", "Login ERROR")
             }
         }
-
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome)
 
-        binding = ActivityWelcomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        db = Firebase.firestore
+        firebaseAuth = FirebaseAuth.getInstance()
 
-        // Choose authentication providers
-        val providers = arrayListOf(
-            AuthUI.IdpConfig.EmailBuilder().build(),
-            // TODO AuthUI.IdpConfig.GoogleBuilder().build(),
-            AuthUI.IdpConfig.AnonymousBuilder().build()
-        )
+        if (firebaseAuth.currentUser == null) {
 
-        // Create and launch sign-in intent
-        binding.btnLogin.setOnClickListener{
-            val signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setIsSmartLockEnabled(false)
-                .setAvailableProviders(providers)
-                .build()
-            signInLauncher.launch(signInIntent)
+            binding = ActivityWelcomeBinding.inflate(layoutInflater)
+            setContentView(binding.root)
+
+            // Choose authentication providers
+            val providers = arrayListOf(
+                AuthUI.IdpConfig.EmailBuilder().build(),
+                // TODO AuthUI.IdpConfig.GoogleBuilder().build(),
+                AuthUI.IdpConfig.AnonymousBuilder().build()
+            )
+
+            // Create and launch sign-in intent
+            binding.btnLogin.setOnClickListener{
+                val signInIntent = AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setIsSmartLockEnabled(false)
+                    .setAvailableProviders(providers)
+                    .build()
+                signInLauncher.launch(signInIntent)
+            }
+        } else {
+
+            // Start MainActivity
+            val intentMainActivity = Intent(this, MainActivity::class.java)
+            intentMainActivity.putExtra("user", firebaseAuth.currentUser)
+            startActivity(intentMainActivity)
+        }
+    }
+
+    /*
+    Start MainActivity if already signed in
+     */
+    override fun onResume() {
+        super.onResume()
+        db = Firebase.firestore
+        firebaseAuth = FirebaseAuth.getInstance()
+        if (firebaseAuth.currentUser != null) {
+            val intentMainActivity = Intent(this, MainActivity::class.java)
+            intentMainActivity.putExtra("user", firebaseAuth.currentUser)
+            startActivity(intentMainActivity)
         }
     }
 }
