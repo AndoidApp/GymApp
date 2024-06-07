@@ -1,5 +1,6 @@
 package com.example.gymapp
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +21,10 @@ class GymViewModel : ViewModel() {
     private val _userPersonalData = MutableLiveData<DBPersonalData>()
     val userPersonalData : LiveData<DBPersonalData>
         get() = _userPersonalData
+    private val _userPhotoUrl = MutableLiveData<Uri>()
+    val userPhotoUrl : LiveData<Uri>
+        get() = _userPhotoUrl
+    var isImageRotated = false
 
     init {
         db.collection(firebaseAuth.currentUser!!.uid)
@@ -29,13 +34,19 @@ class GymViewModel : ViewModel() {
                 var personalData = DBPersonalData()
                 for (document in result) {
                     personalData = document.toObject(DBPersonalData::class.java)
-                    Log.d(HomeFragment.TAG, "${document.id} => ${document.data}")
+                    Log.d(MainActivity.TAG, "${document.id} => ${document.data}")
                 }
                 _userPersonalData.value = personalData
             }
+        _userPhotoUrl.value = firebaseAuth.currentUser?.photoUrl
     }
 
     fun updatePersonalData(newData: DBPersonalData) {
         _userPersonalData.value = newData
+    }
+
+    fun updatePhotoUrl(newUrl: Uri) {
+        _userPhotoUrl.value = newUrl
+        isImageRotated = true
     }
 }

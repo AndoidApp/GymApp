@@ -4,6 +4,9 @@ enum class Sex(val displayName: String) {
     MALE("MALE"), FEMALE("FEMALE")
 }
 
+/**
+ *
+ */
 data class DBPersonalData(val name: String = DEFAULT_NAME,
                           val username: String = DEFAULT_USERNAME,
                           val dateBirth: String = DEFAULT_BIRTHDATE,
@@ -27,6 +30,9 @@ data class DBPersonalData(val name: String = DEFAULT_NAME,
     }
 }
 
+/**
+ * Define documents names on Firebase
+ */
 class DBManager {
     companion object {
         const val PERSONAL_DATA_DOCUMENT_NAME = "personal_data"

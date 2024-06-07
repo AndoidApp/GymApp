@@ -9,22 +9,22 @@ import com.example.gymapp.DBManager
 import com.example.gymapp.DBPersonalData
 import com.example.gymapp.GymViewModel
 import com.example.gymapp.MainActivity
-import com.example.gymapp.R
+import com.example.gymapp.databinding.ActivityWelcomeBinding
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.example.gymapp.databinding.ActivityWelcomeBinding
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
 
 class WelcomeActivity : AppCompatActivity() {
 
     /* DB */
-    private lateinit var db: FirebaseFirestore
-    private lateinit var firebaseAuth: FirebaseAuth
+    private val db = Firebase.firestore
+    private val firebaseAuth = FirebaseAuth.getInstance()
 
     private val viewModel: GymViewModel by viewModels()
     private lateinit var binding : ActivityWelcomeBinding
@@ -35,9 +35,6 @@ class WelcomeActivity : AppCompatActivity() {
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult?) {
-        db = Firebase.firestore
-        firebaseAuth = FirebaseAuth.getInstance()
-
         if (result != null) {
             val response = result.idpResponse
             if (result.resultCode == RESULT_OK) {
@@ -55,10 +52,7 @@ class WelcomeActivity : AppCompatActivity() {
 
                 // TODO => set viewmodel here (efficiency), not in mainActivity, there is another DB query there :(
 
-                // Start MainActivity
-                val intentMainActivity = Intent(this, MainActivity::class.java)
-                intentMainActivity.putExtra("user", user)
-                startActivity(intentMainActivity)
+                startMainActivity()
 
             } else {
                 // LOGIN FAILED (toast, redirect to login page again, ...)
@@ -69,9 +63,6 @@ class WelcomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        db = Firebase.firestore
-        firebaseAuth = FirebaseAuth.getInstance()
 
         if (firebaseAuth.currentUser == null) {
 
@@ -95,25 +86,22 @@ class WelcomeActivity : AppCompatActivity() {
                 signInLauncher.launch(signInIntent)
             }
         } else {
-
-            // Start MainActivity
-            val intentMainActivity = Intent(this, MainActivity::class.java)
-            intentMainActivity.putExtra("user", firebaseAuth.currentUser)
-            startActivity(intentMainActivity)
+            startMainActivity()
         }
     }
 
-    /*
-    Start MainActivity if already signed in
-     */
     override fun onResume() {
         super.onResume()
-        db = Firebase.firestore
-        firebaseAuth = FirebaseAuth.getInstance()
-        if (firebaseAuth.currentUser != null) {
-            val intentMainActivity = Intent(this, MainActivity::class.java)
-            intentMainActivity.putExtra("user", firebaseAuth.currentUser)
-            startActivity(intentMainActivity)
-        }
+        if (firebaseAuth.currentUser != null)
+            startMainActivity()
+    }
+
+    /**
+     * Start MainActivity putting logged user data as intent extra
+     */
+    private fun startMainActivity() {
+        val intentMainActivity = Intent(this, MainActivity::class.java)
+        intentMainActivity.putExtra("user", firebaseAuth.currentUser)
+        startActivity(intentMainActivity)
     }
 }
