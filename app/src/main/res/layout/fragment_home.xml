@@ -38,6 +38,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeTxtWelcomeBack" />
 
+    <ImageView
+        android:id="@+id/imgProfile"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/textView5"
+        app:srcCompat="@drawable/charles_leclerc" />
+
     <TextView
         android:id="@+id/homeTxtAccountBG_1"
         android:layout_width="0dp"
@@ -54,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
-        android:text="name"
+        android:hint="name"
         app:layout_constraintBottom_toBottomOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_1"
@@ -65,11 +75,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="56dp"
-        android:text="username"
+        android:hint="username"
         app:layout_constraintBottom_toBottomOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintVertical_bias="0.13" />
+
+
+    <TextView
+        android:id="@+id/homeTxtBirthDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="dd-mm-yyyy"
+        app:layout_constraintEnd_toEndOf="@+id/homeTxtName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/homeTxtName"
+        app:layout_constraintTop_toBottomOf="@+id/homeTxtName" />
+
+    <TextView
+        android:id="@+id/homeTxtSex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="sex"
+        app:layout_constraintEnd_toEndOf="@+id/homeTxtUsername"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/homeTxtUsername"
+        app:layout_constraintTop_toBottomOf="@+id/homeTxtUsername" />
 
     <Button
         android:id="@+id/homeBtnEdit"
@@ -83,38 +116,6 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeTxtBirthDate" />
-
-    <TextView
-        android:id="@+id/homeTxtBirthDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="dd-mm-yyyy"
-        app:layout_constraintEnd_toEndOf="@+id/homeTxtName"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/homeTxtName"
-        app:layout_constraintTop_toBottomOf="@+id/homeTxtName" />
-
-    <TextView
-        android:id="@+id/homeTxtSex"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="sex"
-        app:layout_constraintEnd_toEndOf="@+id/homeTxtUsername"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/homeTxtUsername"
-        app:layout_constraintTop_toBottomOf="@+id/homeTxtUsername" />
-
-    <ImageView
-        android:id="@+id/imgProfile"
-        android:layout_width="33dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView5"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/textView5"
-        app:srcCompat="@drawable/charles_leclerc" />
 
     <TextView
         android:id="@+id/homeTxtAccountBG_2"
@@ -132,7 +133,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="TRAINING PLAN 1"
+        android:hint="TRAINING PLAN 1"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

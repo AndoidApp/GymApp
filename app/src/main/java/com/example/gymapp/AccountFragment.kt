@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import java.util.Calendar
+import java.util.Date
 
 
 /**
@@ -74,8 +75,9 @@ class AccountFragment : Fragment() {
                 else R.id.editSexFemale
             )
 
-            val c = binding.editDateBirth.text.split("-").toTypedArray()
-            calendar.set(c[2].toInt(), c[1].toInt() - 1, c[0].toInt())
+            val c = binding.editDateBirth.text.split("-").toTypedArray() // 25-06-2024
+            if (c.size == 3)
+                calendar.set(c[2].toInt(), c[1].toInt() - 1, c[0].toInt())
         })
 
 
@@ -95,6 +97,7 @@ class AccountFragment : Fragment() {
                 },
                 year, month, day
             )
+            datePickerDialog.datePicker.maxDate = Date().time
             datePickerDialog.show()
         }
 
