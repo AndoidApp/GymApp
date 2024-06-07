@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Welcome back, {gymbro}"
+        android:text="@string/welcome_message"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,6 +38,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeTxtWelcomeBack" />
 
+    <ImageView
+        android:id="@+id/imgProfile"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/textView5"
+        app:srcCompat="@drawable/charles_leclerc" />
+
     <TextView
         android:id="@+id/homeTxtAccountBG_1"
         android:layout_width="0dp"
@@ -54,22 +64,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
-        android:text="name"
+        android:hint="name"
+        android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintVertical_bias="0.13999999" />
 
     <TextView
-        android:id="@+id/homeTxtSurname"
+        android:id="@+id/homeTxtUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="56dp"
-        android:text="surname"
+        android:hint="username"
+        android:textAlignment="textEnd"
         app:layout_constraintBottom_toBottomOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintVertical_bias="0.13" />
+
+
+    <TextView
+        android:id="@+id/homeTxtBirthDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="dd-mm-yyyy"
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toEndOf="@+id/homeTxtName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/homeTxtName"
+        app:layout_constraintTop_toBottomOf="@+id/homeTxtName" />
+
+    <TextView
+        android:id="@+id/homeTxtSex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="sex"
+        android:textAlignment="textEnd"
+        app:layout_constraintEnd_toEndOf="@+id/homeTxtUsername"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/homeTxtUsername"
+        app:layout_constraintTop_toBottomOf="@+id/homeTxtUsername" />
 
     <Button
         android:id="@+id/homeBtnEdit"
@@ -83,38 +120,6 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeTxtBirthDate" />
-
-    <TextView
-        android:id="@+id/homeTxtBirthDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="yyyy-mm-dd"
-        app:layout_constraintEnd_toEndOf="@+id/homeTxtName"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/homeTxtName"
-        app:layout_constraintTop_toBottomOf="@+id/homeTxtName" />
-
-    <TextView
-        android:id="@+id/homeTxtSex"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="sex"
-        app:layout_constraintEnd_toEndOf="@+id/homeTxtSurname"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/homeTxtSurname"
-        app:layout_constraintTop_toBottomOf="@+id/homeTxtSurname" />
-
-    <ImageView
-        android:id="@+id/imgProfile"
-        android:layout_width="33dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView5"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/textView5"
-        app:srcCompat="@drawable/charles_leclerc" />
 
     <TextView
         android:id="@+id/homeTxtAccountBG_2"
@@ -132,7 +137,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="TRAINING PLAN 1"
+        android:hint="TRAINING PLAN 1"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -178,5 +183,15 @@
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeTxtAccountBG_1" />
+
+    <Button
+        android:id="@+id/homeBtnSignOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Sign out"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgProfile"
+        app:layout_constraintTop_toBottomOf="@+id/homeTxtWelcomeBack" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
