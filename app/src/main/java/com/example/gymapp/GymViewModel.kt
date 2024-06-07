@@ -12,27 +12,28 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
 class GymViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
-    private val _trainingData = MutableLiveData<DBTrainingPlan>()
-  
-    val trainingData : LiveData<DBTrainingPlan>
-        get() = _trainingData
-
-    var viewTraining : Boolean = true;
 
     /* DB */
-    private var db: FirebaseFirestore = Firebase.firestore
-    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val db: FirebaseFirestore = Firebase.firestore
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    /* LIVE DATA */
+    /* LIVE DATA | PERSONAL DATA */
     private val _userPersonalData = MutableLiveData<DBPersonalData>()
     val userPersonalData : LiveData<DBPersonalData>
         get() = _userPersonalData
 
+    /* LIVE DATA | TRAINING DATA */
+    private val _trainingData = MutableLiveData<DBTrainingPlan>()
+    val trainingData : LiveData<DBTrainingPlan>
+        get() = _trainingData
+
     private val _userPhotoUrl = MutableLiveData<Uri>()
     val userPhotoUrl : LiveData<Uri>
         get() = _userPhotoUrl
+
+    /* UTILS */
     var isImageRotated = false
+    var viewTraining : Boolean = true;
 
     init {
         db.collection(firebaseAuth.currentUser!!.uid)
@@ -47,8 +48,9 @@ class GymViewModel : ViewModel() {
                 _userPersonalData.value = personalData
             }
         _userPhotoUrl.value = firebaseAuth.currentUser?.photoUrl
-      
-      db.collection(firebaseAuth.currentUser!!.uid)
+
+        // TODO => fix se l'utente non ha il documento training plan
+        /* db.collection(firebaseAuth.currentUser!!.uid)
             .document(DBManager.TRAINING_DATA_DOCUMENT_NAME)
             .get()
             .addOnSuccessListener { document ->
@@ -67,7 +69,7 @@ class GymViewModel : ViewModel() {
             }
             .addOnFailureListener { exception ->
                 Log.e("TAG di errore", "Errore : $exception")
-            }
+        } */
     }
 
     fun updatePersonalData(newData: DBPersonalData) {

@@ -46,7 +46,6 @@ class AccountFragment : Fragment() {
 
     private val calendar = Calendar.getInstance()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
