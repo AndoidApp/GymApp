@@ -137,7 +137,7 @@ class HomeFragment : Fragment() {
         calendar = Calendar.getInstance()
         picker = MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_24H)
-            .setHour(calendar.get(Calendar.HOUR))
+            .setHour(calendar.get(Calendar.HOUR_OF_DAY))
             .setMinute(calendar.get(Calendar.MINUTE))
             .setTitleText("Select alarm time")
             .build()
@@ -146,23 +146,38 @@ class HomeFragment : Fragment() {
             Log.d(MainActivity.TAG, "OnPositive")
         } */
         picker.addOnPositiveButtonClickListener {
-            setAlarm()
+            setAlarm(picker.hour, picker.minute)
         }
     }
 
-    private fun setAlarm() {
-        calendar = Calendar.getInstance()
+    private fun setAlarm(hour: Int, minute: Int) {
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
+        val alarmCalendar = Calendar.getInstance()
+        alarmCalendar.set(Calendar.HOUR_OF_DAY, hour)
+        alarmCalendar.set(Calendar.MINUTE, minute)
+        alarmCalendar.set(Calendar.SECOND, 0)
+        alarmCalendar.set(Calendar.MILLISECOND, 0)
+
         alarmManager = requireContext().getSystemService(ALARM_SERVICE) as AlarmManager
         alarmManager!!.setRepeating(
-            AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
+            AlarmManager.RTC_WAKEUP, alarmCalendar.timeInMillis,
             AlarmManager.INTERVAL_DAY, pendingIntent
         )
         Toast.makeText(requireContext(), "Alarm set successfully", Toast.LENGTH_SHORT).show()
 
-        // TODO => set correct time and show it
-        binding.homeBtnTrainingReminder.text = "(${calendar.get(Calendar.HOUR)}:${calendar.get(Calendar.MINUTE)}) CANCEL ${calendar.time}}"
+        // TODO => quando chiudi l'app, si dimentica che hai settato l'alarm (usare memoria interna?)
+        val formattedTime = String.format("%02d:%02d", alarmCalendar.get(Calendar.HOUR_OF_DAY), alarmCalendar.get(Calendar.MINUTE))
+        binding.homeBtnTrainingReminder.text = "SET AT ${formattedTime}, CLICK TO CANCEL"
+    }
+
+    private fun cancelAlarm() {
+        alarmManager = requireContext().getSystemService(ALARM_SERVICE) as AlarmManager
+        val intent = Intent(requireContext(), AlarmReceiver::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        alarmManager!!.cancel(pendingIntent)
+        Toast.makeText(requireContext(), "Alarm cancelled", Toast.LENGTH_SHORT).show()
     }
 }
