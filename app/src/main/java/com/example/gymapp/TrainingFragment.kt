@@ -91,8 +91,12 @@ class TrainingFragment : Fragment() {
 
     fun viewTraining()
     {
+        viewModel.extractDataTraining()
         val layout : TableLayout = binding.table
         val manager = DesingManager(requireContext())
+        val title = binding.txt
+        title.isEnabled = false
+        title.setText(DBManager.training_Data_Document[viewModel.trainingPlanId])
 
         // Create rows to display Exercise, sets and reps
         if (viewModel.trainingData.value?.exercise?.size != null) {
@@ -126,7 +130,7 @@ class TrainingFragment : Fragment() {
                     trainingData.weight.add(weightValue)
                 }
             }
-            updateTraining(trainingData)
+            updateTraining(trainingData, binding.txt.text.toString())
         }
 
         // Calculate how many columns to add to save the weights
@@ -202,6 +206,9 @@ class TrainingFragment : Fragment() {
         // Manage submit button
         button = row.getChildAt(1) as Button
         button.setOnClickListener {
+            trainingData.exercise.clear()
+            trainingData.set_number.clear()
+            trainingData.reps.clear()
             for (i in DATA_TABLE_ROW_INDEX until layout.childCount-1) {
                 val child: TableRow = layout.getChildAt(i) as TableRow;
 
@@ -226,12 +233,11 @@ class TrainingFragment : Fragment() {
                         trainingData.reps.add(
                             (child.getChildAt(2) as EditText).text.toString().toInt()
                         )
-
                     }
                 }
             }
 
-            updateTraining(trainingData)
+            updateTraining(trainingData, binding.txt.text.toString())
 
             val navController = Navigation.findNavController(view)
 
@@ -239,13 +245,13 @@ class TrainingFragment : Fragment() {
         }
     }
 
-    fun updateTraining(TrainingData : DBTrainingPlan){
+    fun updateTraining(TrainingData : DBTrainingPlan, documentName : String){
 
         db = Firebase.firestore
         firebaseAuth = FirebaseAuth.getInstance()
 
         db.collection(firebaseAuth.currentUser!!.uid)
-            .document(DBManager.TRAINING_DATA_DOCUMENT_NAME)
+            .document(documentName)
             .set(TrainingData.getHashMapTraining())
     }
 

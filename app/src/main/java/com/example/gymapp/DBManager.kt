@@ -48,6 +48,7 @@ class DBManager {
     companion object {
         const val PERSONAL_DATA_DOCUMENT_NAME = "personal_data"
         const val TRAINING_DATA_DOCUMENT_NAME = "training Plans"
+        var training_Data_Document : MutableList<String> = mutableListOf()
     }
 
 }

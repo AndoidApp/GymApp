@@ -2,10 +2,15 @@ package com.example.gymapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TableLayout
+import android.widget.TableRow
+import android.widget.TextView
+import androidx.core.view.contains
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
@@ -39,6 +44,22 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.extractDocument()
+        if (DBManager.training_Data_Document.size > 0) {
+            val layout: TableLayout = binding.tableLayout
+            val row = TableRow(requireContext())
+            viewModel.trainingPlanContainer.clear()
+            for (element in DBManager.training_Data_Document) {
+                val textView = TextView(requireContext())
+                textView.text = element
+                row.addView(textView)
+                viewModel.trainingPlanContainer.add(textView)
+            }
+            layout.addView(row)
+        }
+
+
+
         /* SHOW USER INFO */
         showUserData()
 
@@ -62,14 +83,27 @@ class HomeFragment : Fragment() {
             navController.navigate(R.id.action_homeFragment_to_accountFragment)
         }
 
-        binding.Test1.setOnClickListener {
-            viewModel.viewTraining = true
-            navController.navigate(R.id.action_homeFragment_to_trainingFragment)
-        }
-
         binding.btnAdd.setOnClickListener {
             viewModel.viewTraining = false
             navController.navigate(R.id.action_homeFragment_to_trainingFragment)
+        }
+
+        for (element in viewModel.trainingPlanContainer){
+            element.setOnClickListener {
+                for (el in viewModel.trainingPlanContainer){
+                    Log.d("Element: ", "${view.id} == ${el.id}")
+
+                    if (el == element){
+                        viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(el)
+                        Log.d("Tag", "${viewModel.trainingPlanContainer}")
+                        if (viewModel.trainingPlanId != -1){
+                            viewModel.viewTraining = true
+                            navController.navigate(R.id.action_homeFragment_to_trainingFragment)
+                        }
+                        break
+                    }
+                }
+            }
         }
     }
 
