@@ -22,6 +22,7 @@ import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.example.gymapp.databinding.FragmentTrainingBinding
 import com.google.firebase.Firebase
@@ -91,89 +92,93 @@ class TrainingFragment : Fragment() {
 
     fun viewTraining()
     {
-        viewModel.extractDataTraining()
+        //viewModel.extractDataTraining()
         val layout : TableLayout = binding.table
         val manager = DesingManager(requireContext())
         val title = binding.txt
         title.isEnabled = false
-        title.setText(DBManager.training_Data_Document[viewModel.trainingPlanId])
+        title.setText(viewModel.training_Data_Document.value!![viewModel.trainingPlanId])
 
         // Create rows to display Exercise, sets and reps
-        if (viewModel.trainingData.value?.exercise?.size != null) {
-            for (i in 0 until viewModel.trainingData.value!!.exercise.size) {
-                val row = TableRow(requireContext())
-                val textList: List<String> = listOf(
-                    viewModel.trainingData.value!!.exercise[i],
-                    viewModel.trainingData.value!!.set_number[i].toString(),
-                    viewModel.trainingData.value!!.reps[i].toString()
-                )
-                manager.createTextView(row, 3, textList)
-                layout.addView(row)
-            }
-        }
+        viewModel.trainingData.observe(viewLifecycleOwner, Observer {
 
-        // Create button to save the added weight
-        val row = TableRow(requireContext())
-        val button = Button(requireContext())
-        button.text = "Save"
-        row.addView(button)
-        layout.addView(row)
-
-        // Save data in db when Save button is clicked
-        button.setOnClickListener{
-            trainingData.weight.clear()
-            for (i in DATA_TABLE_ROW_INDEX until layout.childCount-1){
-                val child : TableRow = layout.getChildAt(i) as TableRow;
-
-                for (j in DATA_TABLE_WEIGHT_INDEX until child.childCount){
-                    val weightValue : Int = (child.getChildAt(j) as EditText).text.toString().toIntOrNull() ?: -1
-                    trainingData.weight.add(weightValue)
+            if (viewModel.trainingData.value?.exercise?.size != null) {
+                for (i in 0 until viewModel.trainingData.value!!.exercise.size) {
+                    val row = TableRow(requireContext())
+                    val textList: List<String> = listOf(
+                        viewModel.trainingData.value!!.exercise[i],
+                        viewModel.trainingData.value!!.set_number[i].toString(),
+                        viewModel.trainingData.value!!.reps[i].toString()
+                    )
+                    manager.createTextView(row, 3, textList)
+                    layout.addView(row)
                 }
             }
-            updateTraining(trainingData, binding.txt.text.toString())
-        }
 
-        // Calculate how many columns to add to save the weights
-        var maxValue : Int = 1
-        for (i in DATA_TABLE_ROW_INDEX until layout.childCount-1){
-            val child : TableRow = layout.getChildAt(i) as TableRow;
-            if (child.getChildAt(DATA_TABLE_SET_INDEX) is TextView) {
-                val textView: TextView = child.getChildAt(DATA_TABLE_SET_INDEX) as TextView
+            // Create button to save the added weight
+            val row = TableRow(requireContext())
+            val button = Button(requireContext())
+            button.text = "Save"
+            row.addView(button)
+            layout.addView(row)
 
-                val textViewValue : Int = textView.text.toString().toIntOrNull() ?: -1
-                if (textViewValue > maxValue)
-                    maxValue = textView.text.toString().toInt()
+            // Save data in db when Save button is clicked
+            button.setOnClickListener {
+                trainingData.weight.clear()
+                for (i in DATA_TABLE_ROW_INDEX until layout.childCount - 1) {
+                    val child: TableRow = layout.getChildAt(i) as TableRow;
+
+                    for (j in DATA_TABLE_WEIGHT_INDEX until child.childCount) {
+                        val weightValue: Int =
+                            (child.getChildAt(j) as EditText).text.toString().toIntOrNull() ?: -1
+                        trainingData.weight.add(weightValue)
+                    }
+                }
+                updateTraining(trainingData, binding.txt.text.toString())
             }
-        }
 
-        // Create cols to save weight information
-        if (layout.getChildAt(DATA_TABLE_SET_INDEX) is TableRow) {
-            var currRow: TableRow = layout.getChildAt(DATA_TABLE_SET_INDEX) as TableRow;
-            manager.createTextView(currRow, maxValue, List(maxValue) { "Kg" })
-
+            // Calculate how many columns to add to save the weights
+            var maxValue: Int = 1
             for (i in DATA_TABLE_ROW_INDEX until layout.childCount - 1) {
-                currRow = layout.getChildAt(i) as TableRow;
-                manager.createEditText(currRow, maxValue)
-            }
-        }
+                val child: TableRow = layout.getChildAt(i) as TableRow;
+                if (child.getChildAt(DATA_TABLE_SET_INDEX) is TextView) {
+                    val textView: TextView = child.getChildAt(DATA_TABLE_SET_INDEX) as TextView
 
-        // TODO: levare questa porcata gigante e inserire i defaul value nella creazione della scheda.
-        // TODO: Problema: l'aggiunta di un nuovo eserizio sovrascrive i dati precedenti e perdo i quelli memorizzati
-        // TODO: Soluzione: BOH
-        if (viewModel.trainingData.value?.weight?.size != null) {
-            var j = 0
-            outerLoop@for (i in DATA_TABLE_ROW_INDEX until layout.childCount-1){
-                var currRow: TableRow = layout.getChildAt(i) as TableRow;
-                for (i in DATA_TABLE_WEIGHT_INDEX until currRow.childCount){
-                    val editText : EditText = currRow.getChildAt(i) as EditText
-                    if (j >= viewModel.trainingData.value!!.weight.size)
-                        break@outerLoop
-                    if (viewModel.trainingData.value!!.weight[j] != -1)
-                        editText.setText(viewModel.trainingData.value!!.weight[j].toString())
-                    j++
+                    val textViewValue: Int = textView.text.toString().toIntOrNull() ?: -1
+                    if (textViewValue > maxValue)
+                        maxValue = textView.text.toString().toInt()
                 }
             }
-        }
+
+            // Create cols to save weight information
+            if (layout.getChildAt(DATA_TABLE_SET_INDEX) is TableRow) {
+                var currRow: TableRow = layout.getChildAt(DATA_TABLE_SET_INDEX) as TableRow;
+                manager.createTextView(currRow, maxValue, List(maxValue) { "Kg" })
+
+                for (i in DATA_TABLE_ROW_INDEX until layout.childCount - 1) {
+                    currRow = layout.getChildAt(i) as TableRow;
+                    manager.createEditText(currRow, maxValue)
+                }
+            }
+
+            // TODO: levare questa porcata gigante e inserire i defaul value nella creazione della scheda.
+            // TODO: Problema: l'aggiunta di un nuovo eserizio sovrascrive i dati precedenti e perdo i quelli memorizzati
+            // TODO: Soluzione: BOH
+            if (viewModel.trainingData.value?.weight?.size != null) {
+                var j = 0
+                outerLoop@ for (i in DATA_TABLE_ROW_INDEX until layout.childCount - 1) {
+                    var currRow: TableRow = layout.getChildAt(i) as TableRow;
+                    for (i in DATA_TABLE_WEIGHT_INDEX until currRow.childCount) {
+                        val editText: EditText = currRow.getChildAt(i) as EditText
+                        if (j >= viewModel.trainingData.value!!.weight.size)
+                            break@outerLoop
+                        if (viewModel.trainingData.value!!.weight[j] != -1)
+                            editText.setText(viewModel.trainingData.value!!.weight[j].toString())
+                        j++
+                    }
+                }
+            }
+        })
     }
 
     fun createTrainingPlan(view: View)
@@ -257,9 +262,15 @@ class TrainingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         if (viewModel.viewTraining)
             viewTraining()
         else
             createTrainingPlan(view)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.trainingData.removeObservers(viewLifecycleOwner)
     }
 }

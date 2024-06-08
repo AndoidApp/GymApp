@@ -43,20 +43,41 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val navController = Navigation.findNavController(view)
 
-        viewModel.extractDocument()
-        if (DBManager.training_Data_Document.size > 0) {
-            val layout: TableLayout = binding.tableLayout
-            val row = TableRow(requireContext())
-            viewModel.trainingPlanContainer.clear()
-            for (element in DBManager.training_Data_Document) {
-                val textView = TextView(requireContext())
-                textView.text = element
-                row.addView(textView)
-                viewModel.trainingPlanContainer.add(textView)
+        viewModel.training_Data_Document.observe(viewLifecycleOwner, Observer{
+            if (viewModel.training_Data_Document.value?.isNotEmpty() ?: false) {
+                val layout: TableLayout = binding.tableLayout
+                val row = TableRow(requireContext())
+                viewModel.trainingPlanContainer.clear()
+                for (element in viewModel.training_Data_Document.value!!) {
+                    val textView = TextView(requireContext())
+                    textView.text = element
+                    row.addView(textView)
+                    viewModel.trainingPlanContainer.add(textView)
+                }
+                layout.addView(row)
             }
-            layout.addView(row)
-        }
+
+            for (element in viewModel.trainingPlanContainer){
+                element.setOnClickListener {
+                    for (el in viewModel.trainingPlanContainer){
+                        Log.d("Element: ", "${view.id} == ${el.id}")
+
+                        if (el == element){
+                            viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(el)
+                            Log.d("Tag", "${viewModel.trainingPlanContainer}")
+                            if (viewModel.trainingPlanId != -1){
+                                viewModel.viewTraining = true
+                                viewModel.extractDataTraining()
+                                navController.navigate(R.id.action_homeFragment_to_trainingFragment)
+                            }
+                            break
+                        }
+                    }
+                }
+            }
+        })
 
 
 
@@ -78,7 +99,7 @@ class HomeFragment : Fragment() {
         }
 
         /* NAVIGATION */
-        val navController = Navigation.findNavController(view)
+
         binding.homeBtnEdit.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_accountFragment)
         }
@@ -86,24 +107,6 @@ class HomeFragment : Fragment() {
         binding.btnAdd.setOnClickListener {
             viewModel.viewTraining = false
             navController.navigate(R.id.action_homeFragment_to_trainingFragment)
-        }
-
-        for (element in viewModel.trainingPlanContainer){
-            element.setOnClickListener {
-                for (el in viewModel.trainingPlanContainer){
-                    Log.d("Element: ", "${view.id} == ${el.id}")
-
-                    if (el == element){
-                        viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(el)
-                        Log.d("Tag", "${viewModel.trainingPlanContainer}")
-                        if (viewModel.trainingPlanId != -1){
-                            viewModel.viewTraining = true
-                            navController.navigate(R.id.action_homeFragment_to_trainingFragment)
-                        }
-                        break
-                    }
-                }
-            }
         }
     }
 

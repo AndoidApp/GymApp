@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.activityViewModels
 import com.example.gymapp.databinding.ActivityMainBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

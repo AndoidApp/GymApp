@@ -25,11 +25,15 @@ class GymViewModel : ViewModel() {
 
     /* LIVE DATA | TRAINING DATA */
     private val _trainingData = MutableLiveData<DBTrainingPlan>()
+    private var _training_Data_Document : MutableLiveData<List<String>> = MutableLiveData()
     var trainingPlanContainer : MutableList<TextView> = mutableListOf()
     var trainingPlanId = -1
 
     val trainingData : LiveData<DBTrainingPlan>
         get() = _trainingData
+
+    val training_Data_Document : LiveData<List<String>>
+        get() = _training_Data_Document
 
     private val _userPhotoUrl = MutableLiveData<Uri>()
     val userPhotoUrl : LiveData<Uri>
@@ -80,17 +84,19 @@ class GymViewModel : ViewModel() {
                     }
                     Log.d("Documenti", "${data}")
                 }
-                DBManager.training_Data_Document = data
+                _training_Data_Document.value = data
             }
             .addOnFailureListener { exception ->
                 Log.w("TAG", "Errore nel recupero dei documenti", exception)
             }
     }
     fun extractDataTraining(){
-        if (trainingPlanId != -1 && DBManager.training_Data_Document.size > trainingPlanId) {
+        if(_training_Data_Document.value == null)
+            return
+        if (trainingPlanId != -1 && _training_Data_Document.value!!.size > trainingPlanId) {
             Log.d("Nell'if:",  "${trainingPlanId} -> ${DBManager.training_Data_Document.size }")
             db.collection(firebaseAuth.currentUser!!.uid)
-                .document(DBManager.training_Data_Document[trainingPlanId])
+                .document(_training_Data_Document.value!![trainingPlanId])
                 .get()
                 .addOnSuccessListener { document ->
                     // [ personal_data , training_plans ]
@@ -105,7 +111,7 @@ class GymViewModel : ViewModel() {
                     //trainingData = document.toObject(DBTrainingPlan::class.java)!!
 
                     _trainingData.value = trainingData
-                    Log.d("TAG", "$trainingData")
+                    Log.d("Dati palestra", "$trainingData")
                 }
                 .addOnFailureListener { exception ->
                     Log.e("TAG di errore", "Errore : $exception")
