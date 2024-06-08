@@ -45,16 +45,25 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val navController = Navigation.findNavController(view)
 
+        viewModel.extractDocument()
         viewModel.training_Data_Document.observe(viewLifecycleOwner, Observer{
             if (viewModel.training_Data_Document.value?.isNotEmpty() ?: false) {
                 val layout: TableLayout = binding.tableLayout
-                val row = TableRow(requireContext())
+                layout.removeAllViews()
+                var row = TableRow(requireContext())
                 viewModel.trainingPlanContainer.clear()
+                var i = 0
                 for (element in viewModel.training_Data_Document.value!!) {
                     val textView = TextView(requireContext())
                     textView.text = element
                     row.addView(textView)
                     viewModel.trainingPlanContainer.add(textView)
+                    i++
+                    if (i == 4){
+                        layout.addView(row)
+                        row = TableRow(requireContext())
+                        i=0
+                    }
                 }
                 layout.addView(row)
             }
