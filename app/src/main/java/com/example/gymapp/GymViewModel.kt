@@ -50,7 +50,7 @@ class GymViewModel : ViewModel() {
         _userPhotoUrl.value = firebaseAuth.currentUser?.photoUrl
 
         // TODO => fix se l'utente non ha il documento training plan
-        /* db.collection(firebaseAuth.currentUser!!.uid)
+        db.collection(firebaseAuth.currentUser!!.uid)
             .document(DBManager.TRAINING_DATA_DOCUMENT_NAME)
             .get()
             .addOnSuccessListener { document ->
@@ -62,14 +62,14 @@ class GymViewModel : ViewModel() {
                 trainingData.exercise = data?.get("Exercise") as MutableList<String>
                 trainingData.set_number = data["Set"] as MutableList<Int>
                 trainingData.reps = data["Reps"] as MutableList<Int>
+                trainingData.weight = data["Weight"] as MutableList<Int>
                 //trainingData = document.toObject(DBTrainingPlan::class.java)!!
-                Log.d("TAG", "${trainingData}")
 
                 _trainingData.value = trainingData
             }
             .addOnFailureListener { exception ->
                 Log.e("TAG di errore", "Errore : $exception")
-        } */
+        }
     }
 
     fun updatePersonalData(newData: DBPersonalData) {
