@@ -1,45 +1,43 @@
 package com.example.gymapp
 
-import android.app.ActionBar
 import android.content.Context
-import android.content.SharedPreferences.Editor
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.contains
-import androidx.core.view.size
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.example.gymapp.databinding.FragmentTrainingBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class DesingManager(var context: Context)
 {
     fun createTextView(child : TableRow, numCol : Int, text : List<String> = listOf()){
         for (j in 0 until numCol) {
-            val textView = TextView(context)
+            val layoutParams = TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.WRAP_CONTENT,
+                1f
+            )
 
+            val textView = TextView(context)
             textView.text = text[j]
-            textView.layoutParams = tableRowDesign()
+            textView.layoutParams = layoutParams
+
+            child.setPadding(10,10,10,10)
             child.addView(textView)
         }
     }
@@ -51,6 +49,29 @@ class DesingManager(var context: Context)
             editText.layoutParams = tableRowDesign()
             child.addView(editText)
         }
+    }
+
+    fun createButton(row: TableRow? = null, text: String, context: Context) : Button{
+        val button = Button(context)
+        button.text = text
+
+        row?.gravity = Gravity.CENTER
+        val background = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 100f
+            setColor(ContextCompat.getColor(context, R.color.primaryOrange))
+        }
+        button.background = background
+
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+
+        layoutParams.setMargins(80, 0, 80, 0)
+        button.layoutParams = layoutParams
+
+        return button
     }
 
     fun tableRowDesign() : TableRow.LayoutParams{
@@ -92,11 +113,14 @@ class TrainingFragment : Fragment() {
     }
 
 
-    fun viewTraining()
+    fun viewTraining(view: View)
     {
         //viewModel.extractDataTraining()
         val layout : TableLayout = binding.table
+        val buttonLayout = binding.buttonLayout
+        val navController = Navigation.findNavController(view)
         val manager = DesingManager(requireContext())
+
         val title = binding.txt
         title.isEnabled = false
         title.setText(viewModel.training_Data_Document.value!![viewModel.trainingPlanId])
@@ -104,86 +128,95 @@ class TrainingFragment : Fragment() {
         // Create rows to display Exercise, sets and reps
         //viewModel.trainingData.observe(viewLifecycleOwner, Observer {
 
-            if (viewModel.trainingData.value?.exercise?.size != null) {
-                for (i in 0 until viewModel.trainingData.value!!.exercise.size) {
-                    val row = TableRow(requireContext())
-                    val textList: List<String> = listOf(
-                        viewModel.trainingData.value!!.exercise[i],
-                        viewModel.trainingData.value!!.set_number[i].toString(),
-                        viewModel.trainingData.value!!.reps[i].toString()
-                    )
-                    manager.createTextView(row, 3, textList)
-                    layout.addView(row)
-                }
+        if (viewModel.trainingData.value?.exercise?.size != null) {
+            for (i in 0 until viewModel.trainingData.value!!.exercise.size) {
+                val row = TableRow(requireContext())
+                val textList: List<String> = listOf(
+                    viewModel.trainingData.value!!.exercise[i],
+                    viewModel.trainingData.value!!.set_number[i].toString(),
+                    viewModel.trainingData.value!!.reps[i].toString()
+                )
+                manager.createTextView(row, 3, textList)
+                layout.addView(row)
             }
+        }
 
-            // Create button to save the added weight
-            val row = TableRow(requireContext())
-            val button = Button(requireContext())
-            button.text = "Save"
-            row.addView(button)
-            layout.addView(row)
+        // Create button to save the added weight
+        val row = TableRow(requireContext())
+        val button = manager.createButton(row, "Save", requireContext())
+        val buttonBack = manager.createButton(row, "Home", requireContext())
 
-            // Save data in db when Save button is clicked
-            button.setOnClickListener {
-                if (viewModel.trainingData.value != null) {
-                    trainingData = viewModel.trainingData.value!!
-                    trainingData.weight.clear()
-                    for (i in DATA_TABLE_ROW_INDEX until layout.childCount - 1) {
-                        val child: TableRow = layout.getChildAt(i) as TableRow;
+        row.addView(button)
+        row.addView(buttonBack)
 
-                        for (j in DATA_TABLE_WEIGHT_INDEX until child.childCount) {
-                            val weightValue: Int =
-                                (child.getChildAt(j) as EditText).text.toString().toIntOrNull() ?: -1
-                            trainingData.weight.add(weightValue)
-                        }
-                    }
-                    updateTraining(trainingData, binding.txt.text.toString())
-                }
-            }
+        buttonLayout.addView(row)
+        //layout.addView(row)
 
-            // Calculate how many columns to add to save the weights
-            var maxValue: Int = 1
-            for (i in DATA_TABLE_ROW_INDEX until layout.childCount - 1) {
-                val child: TableRow = layout.getChildAt(i) as TableRow;
-                if (child.getChildAt(DATA_TABLE_SET_INDEX) is TextView) {
-                    val textView: TextView = child.getChildAt(DATA_TABLE_SET_INDEX) as TextView
+        buttonBack.setOnClickListener {
+            navController.navigate(R.id.action_trainingFragment_to_homeFragment)
+        }
 
-                    val textViewValue: Int = textView.text.toString().toIntOrNull() ?: -1
-                    if (textViewValue > maxValue)
-                        maxValue = textView.text.toString().toInt()
-                }
-            }
+        // Save data in db when Save button is clicked
+        button.setOnClickListener {
+            if (viewModel.trainingData.value != null) {
+                trainingData = viewModel.trainingData.value!!
+                trainingData.weight.clear()
+                for (i in DATA_TABLE_ROW_INDEX until layout.childCount) {
+                    val child: TableRow = layout.getChildAt(i) as TableRow;
 
-            // Create cols to save weight information
-            if (layout.getChildAt(DATA_TABLE_SET_INDEX) is TableRow) {
-                var currRow: TableRow = layout.getChildAt(DATA_TABLE_SET_INDEX) as TableRow;
-                manager.createTextView(currRow, maxValue, List(maxValue) { "Kg" })
-
-                for (i in DATA_TABLE_ROW_INDEX until layout.childCount - 1) {
-                    currRow = layout.getChildAt(i) as TableRow;
-                    manager.createEditText(currRow, maxValue)
-                }
-            }
-
-            // TODO: levare questa porcata gigante e inserire i defaul value nella creazione della scheda.
-            // TODO: Problema: l'aggiunta di un nuovo eserizio sovrascrive i dati precedenti e perdo i quelli memorizzati
-            // TODO: Soluzione: BOH
-            if (viewModel.trainingData.value?.weight?.size != null) {
-                var j = 0
-                outerLoop@ for (i in DATA_TABLE_ROW_INDEX until layout.childCount - 1) {
-                    var currRow: TableRow = layout.getChildAt(i) as TableRow;
-                    for (i in DATA_TABLE_WEIGHT_INDEX until currRow.childCount) {
-                        val editText: EditText = currRow.getChildAt(i) as EditText
-                        if (j >= viewModel.trainingData.value!!.weight.size)
-                            break@outerLoop
-                        if (viewModel.trainingData.value!!.weight[j] != -1)
-                            editText.setText(viewModel.trainingData.value!!.weight[j].toString())
-                        j++
+                    for (j in DATA_TABLE_WEIGHT_INDEX until child.childCount) {
+                        val weightValue: Int =
+                            (child.getChildAt(j) as EditText).text.toString().toIntOrNull() ?: -1
+                        trainingData.weight.add(weightValue)
                     }
                 }
+                updateTraining(trainingData, binding.txt.text.toString())
             }
-        //})
+        }
+
+
+
+        // Calculate how many columns to add to save the weights
+        var maxValue: Int = 1
+        for (i in DATA_TABLE_ROW_INDEX until layout.childCount) {
+            val child: TableRow = layout.getChildAt(i) as TableRow;
+            if (child.getChildAt(DATA_TABLE_SET_INDEX) is TextView) {
+                val textView: TextView = child.getChildAt(DATA_TABLE_SET_INDEX) as TextView
+
+                val textViewValue: Int = textView.text.toString().toIntOrNull() ?: -1
+                if (textViewValue > maxValue)
+                    maxValue = textView.text.toString().toInt()
+            }
+        }
+
+        // Create cols to save weight information
+        if (layout.getChildAt(DATA_TABLE_SET_INDEX) is TableRow) {
+            var currRow: TableRow = layout.getChildAt(DATA_TABLE_SET_INDEX) as TableRow;
+            manager.createTextView(currRow, maxValue, List(maxValue) { "Kg" })
+
+            for (i in DATA_TABLE_ROW_INDEX until layout.childCount) {
+                currRow = layout.getChildAt(i) as TableRow;
+                manager.createEditText(currRow, maxValue)
+            }
+        }
+
+        // TODO: levare questa porcata gigante e inserire i defaul value nella creazione della scheda.
+        // TODO: Problema: l'aggiunta di un nuovo eserizio sovrascrive i dati precedenti e perdo i quelli memorizzati
+        // TODO: Soluzione: BOH
+        if (viewModel.trainingData.value?.weight?.size != null) {
+            var j = 0
+            outerLoop@ for (i in DATA_TABLE_ROW_INDEX until layout.childCount) {
+                var currRow: TableRow = layout.getChildAt(i) as TableRow;
+                for (i in DATA_TABLE_WEIGHT_INDEX until currRow.childCount) {
+                    val editText: EditText = currRow.getChildAt(i) as EditText
+                    if (j >= viewModel.trainingData.value!!.weight.size)
+                        break@outerLoop
+                    if (viewModel.trainingData.value!!.weight[j] != -1)
+                        editText.setText(viewModel.trainingData.value!!.weight[j].toString())
+                    j++
+                }
+            }
+        }
     }
 
     fun createTrainingPlan(view: View)
@@ -199,8 +232,7 @@ class TrainingFragment : Fragment() {
         val row = TableRow(requireContext())
         val listText : List<String> = listOf("New Ex", "Submit")
         for (element in listText) {
-            val button = Button(requireContext())
-            button.text = element
+            val button = manager.createButton(row, element, requireContext())
             row.addView(button)
         }
         layout.addView(row)
@@ -268,10 +300,21 @@ class TrainingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val row = TableRow(requireContext())
+        val listName = listOf("Exercise", "Set", "Reps")
+        val manager = DesingManager(requireContext())
+
+        val background = GradientDrawable().apply {
+            setColor(ContextCompat.getColor(requireContext(), R.color.secondary)) // Imposta il colore di riempimento
+        }
+        row.background = background
+
+        manager.createTextView(row, listName.size, listName)
+        binding.table.addView(row)
 
             if (viewModel.viewTraining) {
                 viewModel.extractDataTraining() {
-                    viewTraining()
+                    viewTraining(view)
                 }
             } else
                 createTrainingPlan(view)

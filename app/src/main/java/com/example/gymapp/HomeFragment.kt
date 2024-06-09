@@ -51,17 +51,21 @@ class HomeFragment : Fragment() {
                 val layout: TableLayout = binding.tableLayout
                 layout.removeAllViews()
                 var row = TableRow(requireContext())
+                row.setPadding(100,0,100,0)
                 viewModel.trainingPlanContainer.clear()
                 var i = 0
                 for (element in viewModel.training_Data_Document.value!!) {
                     val textView = TextView(requireContext())
                     textView.text = element
+                    if (i == 2)
+                        textView.setPadding(10, 0, 100, 0)
                     row.addView(textView)
                     viewModel.trainingPlanContainer.add(textView)
                     i++
-                    if (i == 4){
+                    if (i == 3){
                         layout.addView(row)
                         row = TableRow(requireContext())
+                        row.setPadding(100,0,100,0)
                         i=0
                     }
                 }
