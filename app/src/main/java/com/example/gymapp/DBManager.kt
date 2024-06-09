@@ -48,6 +48,7 @@ class DBManager {
     companion object {
         const val PERSONAL_DATA_DOCUMENT_NAME = "personal_data"
         const val TRAINING_DATA_DOCUMENT_NAME = "training Plans"
+        const val INTERNAL_FILENAME = "gym_app.txt"
     }
 
 }
