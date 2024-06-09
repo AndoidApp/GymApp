@@ -11,6 +11,29 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
+enum class AlarmStatus(val intValue: Int) {
+    SET(1),
+    NOT_SET(0);
+
+    companion object {
+        fun fromInt(value: Int?): AlarmStatus {
+            return entries.find { it.intValue == value } ?: NOT_SET
+        }
+    }
+}
+
+data class AlarmInfo(val status: AlarmStatus, val timeInMillis: Long = DEFAULT_TIME_IN_MILLIS) {
+    fun toFile(): String {
+        return status.intValue.toString() + CONTENT_SEPARATOR + timeInMillis.toString()
+    }
+
+    companion object {
+        const val DEFAULT_TIME_IN_MILLIS = -1L
+        const val INFO_TO_STORE_IN_FILE = 2
+        const val CONTENT_SEPARATOR = ";"
+    }
+}
+
 class GymViewModel : ViewModel() {
 
     /* DB */
@@ -34,6 +57,7 @@ class GymViewModel : ViewModel() {
     /* UTILS */
     var isImageRotated = false
     var viewTraining : Boolean = true;
+    var alarmInfo = AlarmInfo(AlarmStatus.NOT_SET)
 
     init {
         db.collection(firebaseAuth.currentUser!!.uid)

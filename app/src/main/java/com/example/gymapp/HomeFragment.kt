@@ -11,8 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -25,6 +23,7 @@ import com.google.android.material.timepicker.TimeFormat
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropSquareTransformation
 import java.util.Calendar
+import java.util.Locale
 
 
 class HomeFragment : Fragment() {
@@ -71,8 +70,16 @@ class HomeFragment : Fragment() {
                 }
         }
 
+        /* TRAINING ALARM */
         binding.homeBtnTrainingReminder.setOnClickListener {
-            showTimerPicker()
+            when (viewModel.alarmInfo.status) {
+                AlarmStatus.NOT_SET -> showTimerPicker()
+                AlarmStatus.SET -> {
+                    if (viewModel.alarmInfo.timeInMillis > Calendar.getInstance().timeInMillis)
+                        cancelAlarm()
+                    else showTimerPicker()
+                }
+            }
         }
 
         /* NAVIGATION */
@@ -128,6 +135,35 @@ class HomeFragment : Fragment() {
                 .placeholder(R.drawable.avatar_default)
                 .into(binding.imgProfile)
         }
+
+        /*
+        TODO =>
+            if alarm already set, show "cancel" and set variable alarm to set
+            otherwise, show set
+         */
+        // READ FILE
+        val file = requireContext().getFileStreamPath(DBManager.INTERNAL_FILENAME)
+        if (file.exists()) {
+            val contents = file.readText().split(AlarmInfo.CONTENT_SEPARATOR)
+            Log.d(MainActivity.TAG, "FILE => $contents")
+            if (contents.size == AlarmInfo.INFO_TO_STORE_IN_FILE) {
+
+                viewModel.alarmInfo = AlarmInfo(AlarmStatus.fromInt(contents[0].toIntOrNull()), contents[1].toLongOrNull() ?: AlarmInfo.DEFAULT_TIME_IN_MILLIS)
+                binding.homeBtnTrainingReminder.text = if (viewModel.alarmInfo.status == AlarmStatus.SET && viewModel.alarmInfo.timeInMillis > Calendar.getInstance().timeInMillis)
+                    resources.getString(
+                        R.string.training_reminder_set,
+                        String.format(
+                            Locale.getDefault(),
+                            resources.getString(R.string.alarm_format),
+                            Calendar.getInstance().apply { timeInMillis = viewModel.alarmInfo.timeInMillis }.get(Calendar.HOUR_OF_DAY),
+                            Calendar.getInstance().apply { timeInMillis = viewModel.alarmInfo.timeInMillis }.get(Calendar.MINUTE)))
+                else resources.getString(R.string.training_reminder_no_set)
+
+
+            } else Log.e(MainActivity.TAG, "FILE | wrong number of parameters to interpret content")
+        } else {
+            Log.e(MainActivity.TAG, "NO FILE")
+        }
     }
 
     /**
@@ -150,6 +186,9 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     *
+     */
     private fun setAlarm(hour: Int, minute: Int) {
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
@@ -160,24 +199,52 @@ class HomeFragment : Fragment() {
         alarmCalendar.set(Calendar.SECOND, 0)
         alarmCalendar.set(Calendar.MILLISECOND, 0)
 
-        alarmManager = requireContext().getSystemService(ALARM_SERVICE) as AlarmManager
-        alarmManager!!.setRepeating(
-            AlarmManager.RTC_WAKEUP, alarmCalendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY, pendingIntent
-        )
-        Toast.makeText(requireContext(), "Alarm set successfully", Toast.LENGTH_SHORT).show()
+        if (alarmCalendar.timeInMillis < Calendar.getInstance().timeInMillis) {
+            // alarm set in the past => alarm will be set for the following day at the selected time
+            alarmCalendar.timeInMillis += AlarmReceiver.oneDayInMillis
+        }
 
-        // TODO => quando chiudi l'app, si dimentica che hai settato l'alarm (usare memoria interna?)
-        val formattedTime = String.format("%02d:%02d", alarmCalendar.get(Calendar.HOUR_OF_DAY), alarmCalendar.get(Calendar.MINUTE))
-        binding.homeBtnTrainingReminder.text = "SET AT ${formattedTime}, CLICK TO CANCEL"
+        alarmManager = requireContext().getSystemService(ALARM_SERVICE) as AlarmManager
+        alarmManager!!.set(
+            AlarmManager.RTC_WAKEUP, alarmCalendar.timeInMillis,
+            pendingIntent
+        )
+
+        // Store alarm status
+        storeAlarmInfo(AlarmInfo(AlarmStatus.SET, alarmCalendar.timeInMillis))
+
+        binding.homeBtnTrainingReminder.text = resources.getString(
+            R.string.training_reminder_set,
+            String.format(Locale.getDefault(), resources.getString(R.string.alarm_format), alarmCalendar.get(Calendar.HOUR_OF_DAY), alarmCalendar.get(Calendar.MINUTE))
+        )
+
+        Toast.makeText(requireContext(), "Alarm set successfully", Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     *
+     */
     private fun cancelAlarm() {
         alarmManager = requireContext().getSystemService(ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
 
         val pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
         alarmManager!!.cancel(pendingIntent)
+
+        storeAlarmInfo(AlarmInfo(AlarmStatus.NOT_SET))
+        binding.homeBtnTrainingReminder.text = resources.getString(R.string.training_reminder_no_set)
+
         Toast.makeText(requireContext(), "Alarm cancelled", Toast.LENGTH_SHORT).show()
+    }
+
+    /**
+     *
+     */
+    private fun storeAlarmInfo(alarmInfo: AlarmInfo) {
+        viewModel.alarmInfo = alarmInfo
+        requireContext().openFileOutput(DBManager.INTERNAL_FILENAME, Context.MODE_PRIVATE).use {
+            Log.d(MainActivity.TAG, "FILE | ${alarmInfo.toFile()} written in ${DBManager.INTERNAL_FILENAME}")
+            it.write(alarmInfo.toFile().toByteArray())
+        }
     }
 }

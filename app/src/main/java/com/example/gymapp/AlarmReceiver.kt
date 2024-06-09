@@ -12,6 +12,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
 class AlarmReceiver : BroadcastReceiver() {
+
+    companion object {
+        const val oneDayInMillis = 24*60*60*1000
+    }
+
     override fun onReceive(context: Context?, intent: Intent?) {
         val i = Intent(context, MainActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
