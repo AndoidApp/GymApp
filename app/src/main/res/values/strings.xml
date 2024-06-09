@@ -8,4 +8,7 @@
     <string name="dateBirth">%1$s-%2$s-%3$s</string>
     <string name="welcome_warning_desc">Account required</string>
     <string name="warning">WARNING</string>
+    <string name="training_reminder_no_set">SET TRAINING REMINDER</string>
+    <string name="training_reminder_set">SET AT %1$s, CLICK TO CANCEL</string>
+    <string name="alarm_format">%02d:%02d</string>
 </resources>
