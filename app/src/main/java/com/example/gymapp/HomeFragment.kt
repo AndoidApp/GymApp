@@ -78,7 +78,6 @@ class HomeFragment : Fragment() {
                             Log.d("Tag", "${viewModel.trainingPlanContainer}")
                             if (viewModel.trainingPlanId != -1){
                                 viewModel.viewTraining = true
-                                viewModel.extractDataTraining()
                                 navController.navigate(R.id.action_homeFragment_to_trainingFragment)
                             }
                             break

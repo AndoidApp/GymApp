@@ -58,9 +58,6 @@ class GymViewModel : ViewModel() {
         _userPhotoUrl.value = firebaseAuth.currentUser?.photoUrl
 
         extractDocument()
-
-        // TODO => fix se l'utente non ha il documento training plan
-        extractDataTraining()
     }
 
     fun updatePersonalData(newData: DBPersonalData) {
@@ -90,7 +87,7 @@ class GymViewModel : ViewModel() {
                 Log.w("TAG", "Errore nel recupero dei documenti", exception)
             }
     }
-    fun extractDataTraining(){
+    fun extractDataTraining(actionAfterExtraction: () -> Unit){
         if(_training_Data_Document.value == null)
             return
         if (trainingPlanId != -1 && _training_Data_Document.value!!.size > trainingPlanId) {
@@ -112,6 +109,7 @@ class GymViewModel : ViewModel() {
 
                     _trainingData.value = trainingData
                     Log.d("Dati palestra", "$trainingData")
+                    actionAfterExtraction()
                 }
                 .addOnFailureListener { exception ->
                     Log.e("TAG di errore", "Errore : $exception")

@@ -29,6 +29,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class DesingManager(var context: Context)
 {
@@ -100,7 +102,7 @@ class TrainingFragment : Fragment() {
         title.setText(viewModel.training_Data_Document.value!![viewModel.trainingPlanId])
 
         // Create rows to display Exercise, sets and reps
-        viewModel.trainingData.observe(viewLifecycleOwner, Observer {
+        //viewModel.trainingData.observe(viewLifecycleOwner, Observer {
 
             if (viewModel.trainingData.value?.exercise?.size != null) {
                 for (i in 0 until viewModel.trainingData.value!!.exercise.size) {
@@ -124,17 +126,20 @@ class TrainingFragment : Fragment() {
 
             // Save data in db when Save button is clicked
             button.setOnClickListener {
-                trainingData.weight.clear()
-                for (i in DATA_TABLE_ROW_INDEX until layout.childCount - 1) {
-                    val child: TableRow = layout.getChildAt(i) as TableRow;
+                if (viewModel.trainingData.value != null) {
+                    trainingData = viewModel.trainingData.value!!
+                    trainingData.weight.clear()
+                    for (i in DATA_TABLE_ROW_INDEX until layout.childCount - 1) {
+                        val child: TableRow = layout.getChildAt(i) as TableRow;
 
-                    for (j in DATA_TABLE_WEIGHT_INDEX until child.childCount) {
-                        val weightValue: Int =
-                            (child.getChildAt(j) as EditText).text.toString().toIntOrNull() ?: -1
-                        trainingData.weight.add(weightValue)
+                        for (j in DATA_TABLE_WEIGHT_INDEX until child.childCount) {
+                            val weightValue: Int =
+                                (child.getChildAt(j) as EditText).text.toString().toIntOrNull() ?: -1
+                            trainingData.weight.add(weightValue)
+                        }
                     }
+                    updateTraining(trainingData, binding.txt.text.toString())
                 }
-                updateTraining(trainingData, binding.txt.text.toString())
             }
 
             // Calculate how many columns to add to save the weights
@@ -178,7 +183,7 @@ class TrainingFragment : Fragment() {
                     }
                 }
             }
-        })
+        //})
     }
 
     fun createTrainingPlan(view: View)
@@ -214,6 +219,7 @@ class TrainingFragment : Fragment() {
             trainingData.exercise.clear()
             trainingData.set_number.clear()
             trainingData.reps.clear()
+            trainingData.weight.clear()
             for (i in DATA_TABLE_ROW_INDEX until layout.childCount-1) {
                 val child: TableRow = layout.getChildAt(i) as TableRow;
 
@@ -263,10 +269,13 @@ class TrainingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (viewModel.viewTraining)
-            viewTraining()
-        else
-            createTrainingPlan(view)
+            if (viewModel.viewTraining) {
+                viewModel.extractDataTraining() {
+                    viewTraining()
+                }
+            } else
+                createTrainingPlan(view)
+
     }
 
     override fun onDestroyView() {
