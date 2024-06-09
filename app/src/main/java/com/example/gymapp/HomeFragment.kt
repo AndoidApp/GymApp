@@ -3,6 +3,7 @@ package com.example.gymapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -51,21 +52,19 @@ class HomeFragment : Fragment() {
                 val layout: TableLayout = binding.tableLayout
                 layout.removeAllViews()
                 var row = TableRow(requireContext())
-                row.setPadding(100,0,100,0)
+                row.gravity = Gravity.CENTER
                 viewModel.trainingPlanContainer.clear()
                 var i = 0
                 for (element in viewModel.training_Data_Document.value!!) {
                     val textView = TextView(requireContext())
                     textView.text = element
-                    if (i == 2)
-                        textView.setPadding(10, 0, 100, 0)
+
                     row.addView(textView)
                     viewModel.trainingPlanContainer.add(textView)
                     i++
                     if (i == 3){
                         layout.addView(row)
                         row = TableRow(requireContext())
-                        row.setPadding(100,0,100,0)
                         i=0
                     }
                 }

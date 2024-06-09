@@ -16,31 +16,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TableLayout
-        android:id="@+id/table"
-        android:layout_width="398dp"
-        android:layout_height="486dp"
-        android:layout_marginTop="30dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+    <ScrollView
+        android:layout_width="402dp"
+        android:layout_height="540dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/account_toolbar">
 
-        <EditText
-            android:id="@+id/txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter Name"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textSize="20dp"
-            android:textStyle="bold">
+        <TableLayout
+            android:id="@+id/table"
+            android:layout_width="398dp"
+            android:layout_height="486dp"
+            android:layout_marginTop="30dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/account_toolbar">
 
-        </EditText>
+            <EditText
+                android:id="@+id/txt"
+                android:layout_width="398dp"
+                android:layout_height="match_parent"
+                android:text="Enter Name"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textSize="20dp"
+                android:textStyle="bold">
 
+            </EditText>
 
-    </TableLayout>
+        </TableLayout>
+    </ScrollView>
 
     <TableLayout
         android:id="@+id/buttonLayout"

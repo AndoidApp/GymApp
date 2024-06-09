@@ -1,8 +1,12 @@
 package com.example.gymapp
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.InputType
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +18,9 @@ import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import com.example.gymapp.databinding.FragmentTrainingBinding
@@ -42,9 +48,11 @@ class DesingManager(var context: Context)
         }
     }
 
-    fun createEditText(child : TableRow, numCol : Int){
+    fun createEditText(child : TableRow, numCol : Int, isNumber : Boolean){
         for (j in 0 until numCol) {
             val editText : EditText = EditText(context)
+            if (isNumber)
+                editText.inputType = InputType.TYPE_CLASS_NUMBER
 
             editText.layoutParams = tableRowDesign()
             child.addView(editText)
@@ -80,6 +88,28 @@ class DesingManager(var context: Context)
             TableRow.LayoutParams.WRAP_CONTENT,
             1f
         )
+    }
+}
+
+class ConfirmationDialogFragment(private val onConfirmAction: () -> Unit) : DialogFragment() {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setTitle("Confirm")
+                setMessage("Do you really want to delete this training plan? You won't be able to go back")
+                setPositiveButton("Confirm",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        onConfirmAction.invoke()
+                    })
+                setNegativeButton("Cancel",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        dialog.cancel()
+                    })
+            }
+            builder.create()
+        } ?: throw IllegalStateException("Invalid activity")
     }
 }
 
@@ -125,9 +155,6 @@ class TrainingFragment : Fragment() {
         title.isEnabled = false
         title.setText(viewModel.training_Data_Document.value!![viewModel.trainingPlanId])
 
-        // Create rows to display Exercise, sets and reps
-        //viewModel.trainingData.observe(viewLifecycleOwner, Observer {
-
         if (viewModel.trainingData.value?.exercise?.size != null) {
             for (i in 0 until viewModel.trainingData.value!!.exercise.size) {
                 val row = TableRow(requireContext())
@@ -145,12 +172,35 @@ class TrainingFragment : Fragment() {
         val row = TableRow(requireContext())
         val button = manager.createButton(row, "Save", requireContext())
         val buttonBack = manager.createButton(row, "Home", requireContext())
+        val buttonDelete = manager.createButton(row, "Delete", requireContext())
 
         row.addView(button)
         row.addView(buttonBack)
+        row.addView(buttonDelete)
 
         buttonLayout.addView(row)
-        //layout.addView(row)
+
+        buttonDelete.setOnClickListener {
+
+            db = Firebase.firestore
+            firebaseAuth = FirebaseAuth.getInstance()
+
+            val confirmationDialog = ConfirmationDialogFragment {
+
+                db.collection(firebaseAuth.currentUser!!.uid)
+                    .document(binding.txt.text.toString())
+                    .delete()
+                    .addOnCompleteListener {
+                        Toast.makeText(
+                            requireContext(),
+                            "Training plan successfully deleted",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                navController.navigate(R.id.action_trainingFragment_to_homeFragment)
+            }
+            confirmationDialog.show(childFragmentManager, "confirmation_dialog")
+        }
 
         buttonBack.setOnClickListener {
             navController.navigate(R.id.action_trainingFragment_to_homeFragment)
@@ -170,6 +220,11 @@ class TrainingFragment : Fragment() {
                         trainingData.weight.add(weightValue)
                     }
                 }
+                Toast.makeText(
+                    requireContext(),
+                    "information saved successfully",
+                    Toast.LENGTH_SHORT
+                ).show()
                 updateTraining(trainingData, binding.txt.text.toString())
             }
         }
@@ -196,7 +251,7 @@ class TrainingFragment : Fragment() {
 
             for (i in DATA_TABLE_ROW_INDEX until layout.childCount) {
                 currRow = layout.getChildAt(i) as TableRow;
-                manager.createEditText(currRow, maxValue)
+                manager.createEditText(currRow, maxValue, true)
             }
         }
 
@@ -226,7 +281,8 @@ class TrainingFragment : Fragment() {
         val startRow = TableRow(requireContext())
         val manager = DesingManager(requireContext())
 
-        manager.createEditText(startRow, 3)
+        manager.createEditText(startRow, 1, false)
+        manager.createEditText(startRow, 2, true)
         layout.addView(startRow)
 
         val row = TableRow(requireContext())
@@ -235,7 +291,7 @@ class TrainingFragment : Fragment() {
             val button = manager.createButton(row, element, requireContext())
             row.addView(button)
         }
-        layout.addView(row)
+        binding.buttonLayout.addView(row)
 
         // Manage new Ex button
         var button : Button = row.getChildAt(0) as Button
@@ -252,7 +308,7 @@ class TrainingFragment : Fragment() {
             trainingData.set_number.clear()
             trainingData.reps.clear()
             trainingData.weight.clear()
-            for (i in DATA_TABLE_ROW_INDEX until layout.childCount-1) {
+            for (i in DATA_TABLE_ROW_INDEX until layout.childCount) {
                 val child: TableRow = layout.getChildAt(i) as TableRow;
 
                 if (child.getChildAt(0) is EditText && child.getChildAt(1) is EditText && child.getChildAt(2) is EditText
