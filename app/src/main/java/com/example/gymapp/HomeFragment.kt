@@ -7,6 +7,15 @@ import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TableLayout
+import android.widget.TableRow
+import android.widget.TextView
+import androidx.core.view.contains
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +61,53 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val navController = Navigation.findNavController(view)
+
+        viewModel.extractDocument()
+        viewModel.training_Data_Document.observe(viewLifecycleOwner, Observer{
+            if (viewModel.training_Data_Document.value?.isNotEmpty() ?: false) {
+                val layout: TableLayout = binding.tableLayout
+                layout.removeAllViews()
+                var row = TableRow(requireContext())
+                row.gravity = Gravity.CENTER
+                viewModel.trainingPlanContainer.clear()
+                var i = 0
+                for (element in viewModel.training_Data_Document.value!!) {
+                    val textView = TextView(requireContext())
+                    textView.text = element
+
+                    row.addView(textView)
+                    viewModel.trainingPlanContainer.add(textView)
+                    i++
+                    if (i == 3){
+                        layout.addView(row)
+                        row = TableRow(requireContext())
+                        i=0
+                    }
+                }
+                layout.addView(row)
+            }
+
+            for (element in viewModel.trainingPlanContainer){
+                element.setOnClickListener {
+                    for (el in viewModel.trainingPlanContainer){
+                        Log.d("Element: ", "${view.id} == ${el.id}")
+
+                        if (el == element){
+                            viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(el)
+                            Log.d("Tag", "${viewModel.trainingPlanContainer}")
+                            if (viewModel.trainingPlanId != -1){
+                                viewModel.viewTraining = true
+                                navController.navigate(R.id.action_homeFragment_to_trainingFragment)
+                            }
+                            break
+                        }
+                    }
+                }
+            }
+        })
+
+
 
         /* SHOW USER INFO */
         showUserData()
@@ -83,14 +139,9 @@ class HomeFragment : Fragment() {
         }
 
         /* NAVIGATION */
-        val navController = Navigation.findNavController(view)
+
         binding.homeBtnEdit.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_accountFragment)
-        }
-
-        binding.Test1.setOnClickListener {
-            viewModel.viewTraining = true
-            navController.navigate(R.id.action_homeFragment_to_trainingFragment)
         }
 
         binding.btnAdd.setOnClickListener {

@@ -3,6 +3,7 @@ package com.example.gymapp
 
 import android.net.Uri
 import android.util.Log
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -47,8 +48,15 @@ class GymViewModel : ViewModel() {
 
     /* LIVE DATA | TRAINING DATA */
     private val _trainingData = MutableLiveData<DBTrainingPlan>()
+    private var _training_Data_Document : MutableLiveData<List<String>> = MutableLiveData()
+    var trainingPlanContainer : MutableList<TextView> = mutableListOf()
+    var trainingPlanId = -1
+
     val trainingData : LiveData<DBTrainingPlan>
         get() = _trainingData
+
+    val training_Data_Document : LiveData<List<String>>
+        get() = _training_Data_Document
 
     private val _userPhotoUrl = MutableLiveData<Uri>()
     val userPhotoUrl : LiveData<Uri>
@@ -73,27 +81,7 @@ class GymViewModel : ViewModel() {
             }
         _userPhotoUrl.value = firebaseAuth.currentUser?.photoUrl
 
-        // TODO => fix se l'utente non ha il documento training plan
-        /* db.collection(firebaseAuth.currentUser!!.uid)
-            .document(DBManager.TRAINING_DATA_DOCUMENT_NAME)
-            .get()
-            .addOnSuccessListener { document ->
-                // [ personal_data , training_plans ]
-                val data = document.data
-
-                var trainingData = DBTrainingPlan()
-
-                trainingData.exercise = data?.get("Exercise") as MutableList<String>
-                trainingData.set_number = data["Set"] as MutableList<Int>
-                trainingData.reps = data["Reps"] as MutableList<Int>
-                //trainingData = document.toObject(DBTrainingPlan::class.java)!!
-                Log.d("TAG", "${trainingData}")
-
-                _trainingData.value = trainingData
-            }
-            .addOnFailureListener { exception ->
-                Log.e("TAG di errore", "Errore : $exception")
-        } */
+        extractDocument()
     }
 
     fun updatePersonalData(newData: DBPersonalData) {
@@ -103,5 +91,53 @@ class GymViewModel : ViewModel() {
     fun updatePhotoUrl(newUrl: Uri) {
         _userPhotoUrl.value = newUrl
         isImageRotated = true
+    }
+
+    fun extractDocument(){
+        db.collection(firebaseAuth.currentUser!!.uid)
+            .get()
+            .addOnSuccessListener { documents ->
+                val data : MutableList<String> = mutableListOf()
+                for (document in documents) {
+                    if (document.id != "personal_data") {
+                        data.add(document.id)
+
+                    }
+                    Log.d("Documenti", "${data}")
+                }
+                _training_Data_Document.value = data
+            }
+            .addOnFailureListener { exception ->
+                Log.w("TAG", "Errore nel recupero dei documenti", exception)
+            }
+    }
+    fun extractDataTraining(actionAfterExtraction: () -> Unit){
+        if(_training_Data_Document.value == null)
+            return
+        if (trainingPlanId != -1 && _training_Data_Document.value!!.size > trainingPlanId) {
+            Log.d("Nell'if:",  "${trainingPlanId} -> ${DBManager.training_Data_Document.size }")
+            db.collection(firebaseAuth.currentUser!!.uid)
+                .document(_training_Data_Document.value!![trainingPlanId])
+                .get()
+                .addOnSuccessListener { document ->
+                    // [ personal_data , training_plans ]
+                    val data = document.data
+
+                    var trainingData = DBTrainingPlan()
+
+                    trainingData.exercise = data?.get("Exercise") as MutableList<String>
+                    trainingData.set_number = data["Set"] as MutableList<Int>
+                    trainingData.reps = data["Reps"] as MutableList<Int>
+                    trainingData.weight = data["Weight"] as MutableList<Int>
+                    //trainingData = document.toObject(DBTrainingPlan::class.java)!!
+
+                    _trainingData.value = trainingData
+                    Log.d("Dati palestra", "$trainingData")
+                    actionAfterExtraction()
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("TAG di errore", "Errore : $exception")
+                }
+        }
     }
 }
