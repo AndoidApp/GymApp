@@ -15,7 +15,10 @@ import androidx.core.view.contains
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -59,18 +62,21 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val navController = Navigation.findNavController(view)
 
-        viewModel.extractDocument()
-        viewModel.training_Data_Document.observe(viewLifecycleOwner, Observer{
+        viewModel.extractDocument{
             if (viewModel.training_Data_Document.value?.isNotEmpty() ?: false) {
+                binding.homeFragment.removeView(binding.infoTrainingEmpty)
+
                 val layout: TableLayout = binding.tableLayout
                 layout.removeAllViews()
                 var row = TableRow(requireContext())
+
                 row.gravity = Gravity.CENTER
                 viewModel.trainingPlanContainer.clear()
                 var i = 0
                 for (element in viewModel.training_Data_Document.value!!) {
                     val textView = TextView(requireContext())
                     textView.text = element
+                    textView.setPadding(0,0,0,50)
 
                     row.addView(textView)
                     viewModel.trainingPlanContainer.add(textView)
@@ -86,22 +92,15 @@ class HomeFragment : Fragment() {
 
             for (element in viewModel.trainingPlanContainer){
                 element.setOnClickListener {
-                    //for (el in viewModel.trainingPlanContainer){
-                        //Log.d("Element: ", "${view.id} == ${el.id}")
-
-                        //if (el == element){
-                            viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(it)
-                            Log.d("Tag", "${viewModel.trainingPlanContainer}")
-                            if (viewModel.trainingPlanId != -1){
-                                viewModel.viewTraining = true
-                                navController.navigate(R.id.action_homeFragment_to_trainingFragment)
-                            }
-                            //break
-                        //}
-                    //}
+                    viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(it)
+                    Log.d("Tag", "${viewModel.trainingPlanContainer}")
+                    if (viewModel.trainingPlanId != -1){
+                        viewModel.viewTraining = true
+                        navController.navigate(R.id.action_homeFragment_to_trainingFragment)
+                    }
                 }
             }
-        })
+        }
 
 
 

@@ -121,37 +121,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeTxtBirthDate" />
 
-    <Button
-        android:id="@+id/homeBtnTrainingReminder"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/primaryOrange"
-        android:text="@string/training_reminder_no_set"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeTxtAccountBG_2" />
-
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:layout_marginBottom="17dp"
-        android:text="TRAINING PLANS"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.053"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeTxtAccountBG_1" />
 
     <Button
         android:id="@+id/homeBtnSignOut"
@@ -167,46 +136,85 @@
 
     <TextView
         android:id="@+id/homeTxtAccountBG_2"
-        android:layout_width="400dp"
-        android:layout_height="133dp"
+        android:layout_width="413dp"
+        android:layout_height="219dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:background="@color/secondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintHorizontal_bias="0.416"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.702" />
+        app:layout_constraintVertical_bias="0.791" />
 
     <ScrollView
-        android:layout_width="328dp"
-        android:layout_height="53dp"
+        android:id="@+id/scrollView"
+        android:layout_width="359dp"
+        android:layout_height="130dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_2">
+        app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_2"
+        app:layout_constraintVertical_bias="0.395">
 
         <TableLayout
             android:id="@+id/tableLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:stretchColumns="*">
-
-
-        </TableLayout>
+            android:stretchColumns="*" />
     </ScrollView>
 
     <Button
-            android:id="@+id/btn_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="76dp"
-            android:backgroundTint="@color/primaryOrange"
-            android:text="ADD"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_2" />
+        android:id="@+id/homeBtnTrainingReminder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/primaryOrange"
+        android:text="@string/training_reminder_no_set"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/homeTxtAccountBG_2" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="TRAINING PLANS"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/homeTxtAccountBG_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.053"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        android:backgroundTint="@color/primaryOrange"
+        android:text="ADD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_2" />
+
+    <TextView
+        android:id="@+id/infoTrainingEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No training plan present."
+        app:layout_constraintBottom_toTopOf="@+id/btn_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

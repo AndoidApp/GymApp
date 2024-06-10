@@ -81,7 +81,7 @@ class GymViewModel : ViewModel() {
             }
         _userPhotoUrl.value = firebaseAuth.currentUser?.photoUrl
 
-        extractDocument()
+        //extractDocument()
     }
 
     fun updatePersonalData(newData: DBPersonalData) {
@@ -93,7 +93,7 @@ class GymViewModel : ViewModel() {
         isImageRotated = true
     }
 
-    fun extractDocument(){
+    fun extractDocument(actionAfterExtraction: () -> Unit){
         db.collection(firebaseAuth.currentUser!!.uid)
             .get()
             .addOnSuccessListener { documents ->
@@ -106,6 +106,7 @@ class GymViewModel : ViewModel() {
                     Log.d("Documenti", "${data}")
                 }
                 _training_Data_Document.value = data
+                actionAfterExtraction()
             }
             .addOnFailureListener { exception ->
                 Log.w("TAG", "Errore nel recupero dei documenti", exception)
