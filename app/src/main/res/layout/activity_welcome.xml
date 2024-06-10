@@ -7,12 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".login.WelcomeActivity">
 
+    <include
+        android:id="@+id/included_toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/welcomeTxtViewBG"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:layout_marginTop="128dp"
-        android:background="#FFF3CD"
+        android:layout_marginTop="100dp"
+        android:background="@color/secondary"
         android:textAlignment="viewStart"
         android:textAllCaps="true"
         android:textColor="#6A5007"
@@ -38,17 +47,6 @@
         app:layout_constraintStart_toEndOf="@+id/welcomeTxtWarning"
         app:layout_constraintTop_toTopOf="@+id/welcomeTxtViewBG" />
 
-    <TextView
-        android:id="@+id/welcomeTxtTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/gym_app"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/divider"
@@ -56,18 +54,18 @@
         android:layout_height="1dp"
         android:layout_marginTop="20dp"
         android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/included_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeTxtTitle" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="199dp"
         android:layout_height="220dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/included_toolbar"
         app:srcCompat="@drawable/jesusgymbro" />
 
     <Button
@@ -75,11 +73,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="206dp"
-        android:backgroundTint="#000000"
+        android:backgroundTint="@color/primaryOrange"
         android:paddingStart="30sp"
         android:paddingEnd="30sp"
         android:text="@string/login"
-        android:textColor="#EA9022"
+        android:textColor="#000000"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

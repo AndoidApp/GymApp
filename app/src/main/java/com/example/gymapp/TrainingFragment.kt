@@ -383,7 +383,6 @@ class TrainingFragment : Fragment() {
                 }
             } else
                 createTrainingPlan(view)
-
     }
 
     override fun onDestroyView() {
