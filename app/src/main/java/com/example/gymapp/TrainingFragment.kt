@@ -359,7 +359,7 @@ class TrainingFragment : Fragment() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         db.collection(firebaseAuth.currentUser!!.uid)
-            .document(documentName)
+            .document(if (documentName != "") documentName else "default name")
             .set(TrainingData.getHashMapTraining())
     }
 

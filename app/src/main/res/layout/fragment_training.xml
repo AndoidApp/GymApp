@@ -38,7 +38,7 @@
                 android:id="@+id/txt"
                 android:layout_width="398dp"
                 android:layout_height="match_parent"
-                android:text="Enter Name"
+                android:hint="Enter Name"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textSize="20dp"
