@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -60,15 +59,11 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val navController = Navigation.findNavController(view)
 
-        showTrainingPlans(view)
-
-
         /* SHOW USER INFO */
         showUserData()
 
         /* SHOW USER's TRAINING PLANS */
-        // TODO => similar to previous observer
-
+        showTrainingPlans(view)
 
         /* BUTTONS */
         binding.homeBtnSignOut.setOnClickListener {
@@ -83,17 +78,16 @@ class HomeFragment : Fragment() {
         /* TRAINING ALARM */
         binding.homeBtnTrainingReminder.setOnClickListener {
             when (viewModel.alarmInfo.status) {
-                AlarmStatus.NOT_SET -> showTimerPicker()
+                AlarmStatus.NOT_SET -> showTimePicker()
                 AlarmStatus.SET -> {
                     if (viewModel.alarmInfo.timeInMillis > Calendar.getInstance().timeInMillis)
                         cancelAlarm()
-                    else showTimerPicker()
+                    else showTimePicker()
                 }
             }
         }
 
         /* NAVIGATION */
-
         binding.homeBtnEdit.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_accountFragment)
         }
@@ -152,7 +146,7 @@ class HomeFragment : Fragment() {
     }
 
     /**
-     *
+     * Load user's personal data from viewmodel
      */
     private fun showUserData() {
         viewModel.userPersonalData.observe(viewLifecycleOwner, Observer {
@@ -188,18 +182,12 @@ class HomeFragment : Fragment() {
                 .into(binding.imgProfile)
         }
 
-        /*
-        TODO =>
-            if alarm already set, show "cancel" and set variable alarm to set
-            otherwise, show set
-         */
-        // READ FILE
+        // ALARM | read file to load current alarm info previously stored in the internal storage
         val file = requireContext().getFileStreamPath(DBManager.INTERNAL_FILENAME)
         if (file.exists()) {
             val contents = file.readText().split(AlarmInfo.CONTENT_SEPARATOR)
             Log.d(MainActivity.TAG, "FILE => $contents")
             if (contents.size == AlarmInfo.INFO_TO_STORE_IN_FILE) {
-
                 viewModel.alarmInfo = AlarmInfo(AlarmStatus.fromInt(contents[0].toIntOrNull()), contents[1].toLongOrNull() ?: AlarmInfo.DEFAULT_TIME_IN_MILLIS)
                 binding.homeBtnTrainingReminder.text = if (viewModel.alarmInfo.status == AlarmStatus.SET && viewModel.alarmInfo.timeInMillis > Calendar.getInstance().timeInMillis)
                     resources.getString(
@@ -210,36 +198,29 @@ class HomeFragment : Fragment() {
                             Calendar.getInstance().apply { timeInMillis = viewModel.alarmInfo.timeInMillis }.get(Calendar.HOUR_OF_DAY),
                             Calendar.getInstance().apply { timeInMillis = viewModel.alarmInfo.timeInMillis }.get(Calendar.MINUTE)))
                 else resources.getString(R.string.training_reminder_no_set)
-
-
             } else Log.e(MainActivity.TAG, "FILE | wrong number of parameters to interpret content")
-        } else {
-            Log.e(MainActivity.TAG, "NO FILE")
-        }
+        } else Log.e(MainActivity.TAG, "NO FILE")
     }
 
     /**
-     *
+     * Show time picker to select the time to receive the alarm at
      */
-    private fun showTimerPicker() {
+    private fun showTimePicker() {
         calendar = Calendar.getInstance()
         picker = MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setHour(calendar.get(Calendar.HOUR_OF_DAY))
             .setMinute(calendar.get(Calendar.MINUTE))
-            .setTitleText("Select alarm time")
+            .setTitleText(AlarmReceiver.TIME_PICKER_TEXT)
             .build()
-        picker.show(parentFragmentManager, "gym_app")
-        /* picker.addOnPositiveButtonClickListener {
-            Log.d(MainActivity.TAG, "OnPositive")
-        } */
+        picker.show(parentFragmentManager, AlarmReceiver.CHANNEL_ID)
         picker.addOnPositiveButtonClickListener {
             setAlarm(picker.hour, picker.minute)
         }
     }
 
     /**
-     *
+     * Set alarm through AlarmManager and store its information in the internal storage
      */
     private fun setAlarm(hour: Int, minute: Int) {
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
@@ -269,12 +250,11 @@ class HomeFragment : Fragment() {
             R.string.training_reminder_set,
             String.format(Locale.getDefault(), resources.getString(R.string.alarm_format), alarmCalendar.get(Calendar.HOUR_OF_DAY), alarmCalendar.get(Calendar.MINUTE))
         )
-
-        Toast.makeText(requireContext(), "Alarm set successfully", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), resources.getString(R.string.home_fragment_alarm_set), Toast.LENGTH_SHORT).show()
     }
 
     /**
-     *
+     * Cancel alarm previously set (through AlarmManager)
      */
     private fun cancelAlarm() {
         alarmManager = requireContext().getSystemService(ALARM_SERVICE) as AlarmManager
@@ -285,12 +265,12 @@ class HomeFragment : Fragment() {
 
         storeAlarmInfo(AlarmInfo(AlarmStatus.NOT_SET))
         binding.homeBtnTrainingReminder.text = resources.getString(R.string.training_reminder_no_set)
-
-        Toast.makeText(requireContext(), "Alarm cancelled", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), resources.getString(R.string.home_fragment_alarm_cancelled), Toast.LENGTH_SHORT).show()
     }
 
     /**
-     *
+     * Store alarm info in the internal store [status;timeInMillis]
+     * e.g. [SET;19900302]
      */
     private fun storeAlarmInfo(alarmInfo: AlarmInfo) {
         viewModel.alarmInfo = alarmInfo

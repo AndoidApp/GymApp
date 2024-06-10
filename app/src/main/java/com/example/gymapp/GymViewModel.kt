@@ -12,6 +12,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
+/**
+ * Alarm status enumeration
+ */
 enum class AlarmStatus(val intValue: Int) {
     SET(1),
     NOT_SET(0);
@@ -23,30 +26,47 @@ enum class AlarmStatus(val intValue: Int) {
     }
 }
 
+/**
+ * Class to handle alarms storing status and set time in millis
+ */
 data class AlarmInfo(val status: AlarmStatus, val timeInMillis: Long = DEFAULT_TIME_IN_MILLIS) {
-    fun toFile(): String {
-        return status.intValue.toString() + CONTENT_SEPARATOR + timeInMillis.toString()
-    }
 
     companion object {
         const val DEFAULT_TIME_IN_MILLIS = -1L
         const val INFO_TO_STORE_IN_FILE = 2
         const val CONTENT_SEPARATOR = ";"
     }
+
+    /**
+     * This function returns the string to save alarm info to file
+     */
+    fun toFile(): String {
+        return status.intValue.toString() + CONTENT_SEPARATOR + timeInMillis.toString()
+    }
+
 }
 
+
+/**
+ * GymViewModel subclass of [ViewModel].
+ * This viewmodel is used to store current user's personal data information and his/her training plans
+ */
 class GymViewModel : ViewModel() {
 
-    /* DB */
+    /** DB */
     private val db: FirebaseFirestore = Firebase.firestore
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    /* LIVE DATA | PERSONAL DATA */
+    /** LIVE DATA | PERSONAL DATA */
     private val _userPersonalData = MutableLiveData<DBPersonalData>()
     val userPersonalData : LiveData<DBPersonalData>
         get() = _userPersonalData
 
-    /* LIVE DATA | TRAINING DATA */
+    private val _userPhotoUrl = MutableLiveData<Uri>()
+    val userPhotoUrl : LiveData<Uri>
+        get() = _userPhotoUrl
+
+    /** LIVE DATA | TRAINING DATA */
     private val _trainingData = MutableLiveData<DBTrainingPlan>()
     private var _training_Data_Document : MutableLiveData<List<String>> = MutableLiveData()
     var trainingPlanContainer : MutableList<TextView> = mutableListOf()
@@ -58,16 +78,14 @@ class GymViewModel : ViewModel() {
     val training_Data_Document : LiveData<List<String>>
         get() = _training_Data_Document
 
-    private val _userPhotoUrl = MutableLiveData<Uri>()
-    val userPhotoUrl : LiveData<Uri>
-        get() = _userPhotoUrl
 
     /* UTILS */
-    var isImageRotated = false
+    var isImageRotated = false // avoid profile picture double rotation
     var viewTraining : Boolean = true;
     var alarmInfo = AlarmInfo(AlarmStatus.NOT_SET)
 
     init {
+        // Load personal data from DB
         db.collection(firebaseAuth.currentUser!!.uid)
             .get()
             .addOnSuccessListener { result ->
@@ -90,7 +108,7 @@ class GymViewModel : ViewModel() {
 
     fun updatePhotoUrl(newUrl: Uri) {
         _userPhotoUrl.value = newUrl
-        isImageRotated = true
+        isImageRotated = true // necessary to avoid the image is rotated again in HomeFragment having updated it
     }
 
     fun extractDocument(actionAfterExtraction: () -> Unit){
