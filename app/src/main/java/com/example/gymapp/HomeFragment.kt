@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -59,49 +60,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val navController = Navigation.findNavController(view)
 
-        viewModel.extractDocument{
-            if (viewModel.training_Data_Document.value?.isNotEmpty() ?: false) {
-                binding.homeFragment.removeView(binding.infoTrainingEmpty)
-
-                val layout: TableLayout = binding.tableLayout
-                layout.removeAllViews()
-                var row = TableRow(requireContext())
-
-                row.gravity = Gravity.CENTER
-                viewModel.trainingPlanContainer.clear()
-                var i = 0
-                for (element in viewModel.training_Data_Document.value!!) {
-                    val textView = TextView(requireContext())
-                    textView.text = element
-                    textView.setPadding(0,0,0,50)
-
-                    row.addView(textView)
-                    viewModel.trainingPlanContainer.add(textView)
-                    i++
-                    if (i == 3){
-                        layout.addView(row)
-                        row = TableRow(requireContext())
-                        i=0
-                    }
-                }
-                layout.addView(row)
-            }
-            else{
-                binding.infoTrainingEmpty.text = "No training plans here"
-            }
-
-            for (element in viewModel.trainingPlanContainer){
-                element.setOnClickListener {
-                    viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(it)
-                    Log.d("Tag", "${viewModel.trainingPlanContainer}")
-                    if (viewModel.trainingPlanId != -1){
-                        viewModel.viewTraining = true
-                        navController.navigate(R.id.action_homeFragment_to_trainingFragment)
-                    }
-                }
-            }
-        }
-
+        showTrainingPlans(view)
 
 
         /* SHOW USER INFO */
@@ -145,6 +104,53 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun showTrainingPlans(view: View){
+        val navController = Navigation.findNavController(view)
+
+        viewModel.extractDocument{
+            if (viewModel.training_Data_Document.value?.isNotEmpty() ?: false) {
+                binding.homeFragment.removeView(binding.infoTrainingEmpty)
+
+                val layout: TableLayout = binding.tableLayout
+                layout.removeAllViews()
+                var row = TableRow(requireContext())
+
+                row.gravity = Gravity.CENTER
+                viewModel.trainingPlanContainer.clear()
+                var i = 0
+                for (element in viewModel.training_Data_Document.value!!) {
+                    val textView = TextView(requireContext())
+                    textView.text = element
+                    textView.setPadding(0,0,0,50)
+
+                    row.addView(textView)
+                    viewModel.trainingPlanContainer.add(textView)
+                    i++
+                    if (i == 3){
+                        layout.addView(row)
+                        row = TableRow(requireContext())
+                        i=0
+                    }
+                }
+                layout.addView(row)
+            }
+            else{
+                binding.infoTrainingEmpty.text = "No training plans here"
+            }
+
+            for (element in viewModel.trainingPlanContainer){
+                element.setOnClickListener {
+                    viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(it)
+                    Log.d("Tag", "${viewModel.trainingPlanContainer}")
+                    if (viewModel.trainingPlanId != -1){
+                        viewModel.viewTraining = true
+                        navController.navigate(R.id.action_homeFragment_to_trainingFragment)
+                    }
+                }
+            }
+        }
+    }
+
     /**
      *
      */
@@ -172,11 +178,11 @@ class HomeFragment : Fragment() {
         })
 
         viewModel.userPhotoUrl.observe(viewLifecycleOwner) { uri ->
-            val rotationDegrees = if (viewModel.isImageRotated) 0F else 90F
+            //val rotationDegrees = if (viewModel.isImageRotated) 0F else 0F
             Picasso.get().load(uri)
                 .transform(CropSquareTransformation())
                 .fit().centerInside()
-                .rotate(rotationDegrees)
+                //.rotate(rotationDegrees)
                 .error(R.drawable.charles_leclerc)
                 .placeholder(R.drawable.avatar_default)
                 .into(binding.imgProfile)

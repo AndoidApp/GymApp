@@ -56,26 +56,26 @@
         android:id="@+id/homeTxtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
+        android:layout_marginStart="32dp"
         android:hint="name"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_1"
-        app:layout_constraintVertical_bias="0.13999999" />
+        app:layout_constraintVertical_bias="0.137" />
+
 
     <TextView
         android:id="@+id/homeTxtUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="56dp"
+        android:layout_marginEnd="44dp"
         android:hint="username"
         android:textAlignment="textEnd"
         app:layout_constraintBottom_toBottomOf="@+id/homeTxtAccountBG_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_1"
-        app:layout_constraintVertical_bias="0.13" />
-
+        app:layout_constraintVertical_bias="0.137" />
 
     <TextView
         android:id="@+id/homeTxtBirthDate"
@@ -144,8 +144,8 @@
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="359dp"
-        android:layout_height="130dp"
+        android:layout_width="327dp"
+        android:layout_height="116dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
