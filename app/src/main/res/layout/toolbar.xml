@@ -14,6 +14,7 @@
         android:background="@color/primaryOrange"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        app:title=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,17 +24,15 @@
         android:id="@+id/txtActivityMainAppTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="20dp"
         android:text="@string/gym_app"
         android:textSize="20sp"
         android:textStyle="bold"
         android:translationZ="2dp"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/account_toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:layout_constraintVertical_bias=".50" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

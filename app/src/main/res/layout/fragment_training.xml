@@ -8,7 +8,7 @@
     tools:context=".TrainingFragment">
 
     <include
-        android:id="@+id/account_toolbar"
+        android:id="@+id/included_toolbar"
         layout="@layout/toolbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:layout_height="540dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/account_toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/included_toolbar">
 
         <TableLayout
             android:id="@+id/table"
@@ -32,7 +32,7 @@
             android:paddingRight="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/account_toolbar">
+            app:layout_constraintTop_toBottomOf="@+id/included_toolbar">
 
             <EditText
                 android:id="@+id/txt"

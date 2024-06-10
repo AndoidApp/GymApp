@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:title="Home" />
+    <item
+        android:id="@+id/accountFragment"
+        android:title="Account" />
+    <item
+        android:id="@+id/trainingFragment"
+        android:title="Training plan" />
+</menu>

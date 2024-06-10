@@ -7,16 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".login.WelcomeActivity">
 
-    <include
-        android:id="@+id/account_toolbar"
-        layout="@layout/toolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
     <ImageView
         android:id="@+id/editImg"
         android:layout_width="176dp"
@@ -25,8 +15,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/account_toolbar"
-        app:layout_constraintVertical_bias="0.120000005"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.02"
         app:srcCompat="@drawable/charles_leclerc" />
 
     <EditText
