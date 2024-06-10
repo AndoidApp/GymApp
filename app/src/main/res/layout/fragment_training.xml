@@ -7,21 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".TrainingFragment">
 
-    <include
-        android:id="@+id/included_toolbar"
-        layout="@layout/toolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ScrollView
         android:layout_width="402dp"
         android:layout_height="540dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/included_toolbar">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TableLayout
             android:id="@+id/table"

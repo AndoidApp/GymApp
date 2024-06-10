@@ -91,7 +91,7 @@ class HomeFragment : Fragment() {
                 layout.addView(row)
             }
             else{
-                binding.infoTrainingEmpty.visibility = View.VISIBLE
+                binding.infoTrainingEmpty.text = "No training plan present."
             }
 
             for (element in viewModel.trainingPlanContainer){
