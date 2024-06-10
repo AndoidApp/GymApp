@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -88,6 +89,9 @@ class HomeFragment : Fragment() {
                     }
                 }
                 layout.addView(row)
+            }
+            else{
+                binding.infoTrainingEmpty.visibility = View.VISIBLE
             }
 
             for (element in viewModel.trainingPlanContainer){

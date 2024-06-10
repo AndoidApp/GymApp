@@ -214,7 +214,8 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_2" />
+        app:layout_constraintTop_toTopOf="@+id/homeTxtAccountBG_2"
+        tools:visibility="invisible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

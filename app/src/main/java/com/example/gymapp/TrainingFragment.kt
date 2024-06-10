@@ -326,8 +326,17 @@ class TrainingFragment : Fragment() {
                         trainingData.exercise.add(
                             (child.getChildAt(0) as EditText).text.toString()
                         );
+                        var setNumber = (child.getChildAt(1) as EditText).text.toString().toInt()
+                        if (setNumber > 6) {
+                            Toast.makeText(
+                                requireContext(),
+                                "The maximum supported set number is six. The entered value will be converted into six",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            setNumber = 6
+                        }
                         trainingData.set_number.add(
-                            (child.getChildAt(1) as EditText).text.toString().toInt()
+                            setNumber
                         );
                         trainingData.reps.add(
                             (child.getChildAt(2) as EditText).text.toString().toInt()
