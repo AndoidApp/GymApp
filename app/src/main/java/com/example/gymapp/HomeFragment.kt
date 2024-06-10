@@ -178,11 +178,11 @@ class HomeFragment : Fragment() {
         })
 
         viewModel.userPhotoUrl.observe(viewLifecycleOwner) { uri ->
-            //val rotationDegrees = if (viewModel.isImageRotated) 0F else 0F
+            val rotationDegrees = if (viewModel.isImageRotated) 0F else 90F
             Picasso.get().load(uri)
                 .transform(CropSquareTransformation())
                 .fit().centerInside()
-                //.rotate(rotationDegrees)
+                .rotate(rotationDegrees)
                 .error(R.drawable.charles_leclerc)
                 .placeholder(R.drawable.avatar_default)
                 .into(binding.imgProfile)

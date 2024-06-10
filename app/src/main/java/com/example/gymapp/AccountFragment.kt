@@ -151,7 +151,7 @@ class AccountFragment : Fragment() {
             Picasso.get().load(uri)
                 .transform(CropSquareTransformation())
                 .fit().centerInside()
-                //.rotate(90F)
+                .rotate(90F)
                 .error(R.drawable.charles_leclerc)
                 .placeholder(R.drawable.avatar_default)
                 .into(binding.editImg)
