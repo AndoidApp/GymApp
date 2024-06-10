@@ -1,7 +1,6 @@
 package com.example.gymapp
 
 import android.Manifest
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -14,7 +13,8 @@ import androidx.core.app.NotificationManagerCompat
 class AlarmReceiver : BroadcastReceiver() {
 
     companion object {
-        const val oneDayInMillis = 24*60*60*1000
+        const val ONE_DAY_IN_MILLIS = 24*60*60*1000
+        const val CHANNEL_ID = "gym_app"
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -22,7 +22,7 @@ class AlarmReceiver : BroadcastReceiver() {
         i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_IMMUTABLE)
 
-        val builder = NotificationCompat.Builder(context!!, "gym_app")
+        val builder = NotificationCompat.Builder(context!!, CHANNEL_ID)
             .setSmallIcon(R.drawable.charles_leclerc)
             .setContentTitle("Gym App")
             .setContentText("Time to train!")

@@ -122,6 +122,7 @@
         android:layout_marginTop="12dp"
         android:backgroundTint="@color/primaryOrange"
         android:text="SIGN OUT"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.442"
         app:layout_constraintStart_toEndOf="@+id/homeBtnEdit"

@@ -5,21 +5,16 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.core.view.contains
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -39,6 +34,7 @@ class HomeFragment : Fragment() {
 
     companion object {
         fun newInstance() = HomeFragment()
+        const val ID = "Home"
     }
 
     private lateinit var binding : FragmentHomeBinding
@@ -91,7 +87,7 @@ class HomeFragment : Fragment() {
                 layout.addView(row)
             }
             else{
-                binding.infoTrainingEmpty.text = "No training plan present."
+                binding.infoTrainingEmpty.text = "No training plans here"
             }
 
             for (element in viewModel.trainingPlanContainer){
@@ -251,7 +247,7 @@ class HomeFragment : Fragment() {
 
         if (alarmCalendar.timeInMillis < Calendar.getInstance().timeInMillis) {
             // alarm set in the past => alarm will be set for the following day at the selected time
-            alarmCalendar.timeInMillis += AlarmReceiver.oneDayInMillis
+            alarmCalendar.timeInMillis += AlarmReceiver.ONE_DAY_IN_MILLIS
         }
 
         alarmManager = requireContext().getSystemService(ALARM_SERVICE) as AlarmManager

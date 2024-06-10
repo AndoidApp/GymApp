@@ -6,6 +6,7 @@
         android:title="Home" />
     <item
         android:id="@+id/accountFragment"
+        android:icon="@drawable/charles_leclerc"
         android:title="Account" />
     <item
         android:id="@+id/trainingFragment"
