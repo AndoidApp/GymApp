@@ -86,19 +86,19 @@ class HomeFragment : Fragment() {
 
             for (element in viewModel.trainingPlanContainer){
                 element.setOnClickListener {
-                    for (el in viewModel.trainingPlanContainer){
-                        Log.d("Element: ", "${view.id} == ${el.id}")
+                    //for (el in viewModel.trainingPlanContainer){
+                        //Log.d("Element: ", "${view.id} == ${el.id}")
 
-                        if (el == element){
-                            viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(el)
+                        //if (el == element){
+                            viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(it)
                             Log.d("Tag", "${viewModel.trainingPlanContainer}")
                             if (viewModel.trainingPlanId != -1){
                                 viewModel.viewTraining = true
                                 navController.navigate(R.id.action_homeFragment_to_trainingFragment)
                             }
-                            break
-                        }
-                    }
+                            //break
+                        //}
+                    //}
                 }
             }
         })
