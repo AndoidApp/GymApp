@@ -11,4 +11,8 @@
     <string name="training_reminder_no_set">SET TRAINING REMINDER</string>
     <string name="training_reminder_set">SET AT %1$s, CLICK TO CANCEL</string>
     <string name="alarm_format">%02d:%02d</string>
+    <string name="account_fragment_updated">Account updated!</string>
+    <string name="account_fragment_image_error">Image upload failed</string>
+    <string name="home_fragment_alarm_set">Alarm set successfully</string>
+    <string name="home_fragment_alarm_cancelled">Alarm cancelled</string>
 </resources>
