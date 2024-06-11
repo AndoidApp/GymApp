@@ -43,7 +43,6 @@ data class AlarmInfo(val status: AlarmStatus, val timeInMillis: Long = DEFAULT_T
     fun toFile(): String {
         return status.intValue.toString() + CONTENT_SEPARATOR + timeInMillis.toString()
     }
-
 }
 
 
@@ -52,6 +51,10 @@ data class AlarmInfo(val status: AlarmStatus, val timeInMillis: Long = DEFAULT_T
  * This viewmodel is used to store current user's personal data information and his/her training plans
  */
 class GymViewModel : ViewModel() {
+
+    companion object {
+        const val TAG = "GymViewModel"
+    }
 
     /** DB */
     private val db: FirebaseFirestore = Firebase.firestore
@@ -86,20 +89,24 @@ class GymViewModel : ViewModel() {
 
     init {
         // Load personal data from DB
-        db.collection(firebaseAuth.currentUser!!.uid)
-            .get()
-            .addOnSuccessListener { result ->
-                // [ personal_data , training_plans ]
-                var personalData = DBPersonalData()
-                for (document in result) {
-                    personalData = document.toObject(DBPersonalData::class.java)
-                    Log.d(MainActivity.TAG, "${document.id} => ${document.data}")
+        if (firebaseAuth.currentUser != null) {
+            db.collection(firebaseAuth.currentUser!!.uid)
+                .get()
+                .addOnSuccessListener { result ->
+                    var personalData = DBPersonalData()
+                    for (document in result) {
+                        if (document.id == DBManager.PERSONAL_DATA_DOCUMENT_NAME) {
+                            personalData = document.toObject(DBPersonalData::class.java)
+                            Log.d(TAG, "${document.id} => ${document.data}")
+                            _userPersonalData.value = personalData
+                        }
+                    }
                 }
-                _userPersonalData.value = personalData
-            }
+                .addOnFailureListener { e ->
+                    Log.e(TAG, "ERROR", e)
+                }
+        }
         _userPhotoUrl.value = firebaseAuth.currentUser?.photoUrl
-
-        //extractDocument()
     }
 
     fun updatePersonalData(newData: DBPersonalData) {
@@ -108,34 +115,42 @@ class GymViewModel : ViewModel() {
 
     fun updatePhotoUrl(newUrl: Uri) {
         _userPhotoUrl.value = newUrl
-        isImageRotated = true // necessary to avoid the image is rotated again in HomeFragment having updated it
+        isImageRotated = true // necessary to avoid the image is double rotated in HomeFragment having updated it
     }
 
-    fun extractDocument(actionAfterExtraction: () -> Unit){
-        db.collection(firebaseAuth.currentUser!!.uid)
-            .get()
-            .addOnSuccessListener { documents ->
-                val data : MutableList<String> = mutableListOf()
+    /**
+     * Extract all training plans
+     */
+    fun extractDocument(actionAfterExtraction: () -> Unit) {
+        if (firebaseAuth.currentUser != null) {
+            db.collection(firebaseAuth.currentUser!!.uid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    val data : MutableList<String> = mutableListOf()
 
-                // Get the training plans
-                for (document in documents) {
-                    if (document.id != "personal_data") {
-                        data.add(document.id)
+                    // Get training plans
+                    for (document in documents) {
+                        if (document.id != DBManager.PERSONAL_DATA_DOCUMENT_NAME) {
+                            data.add(document.id)
+                        }
                     }
+                    _training_Data_Document.value = data
+                    // Function to execute after data extraction
+                    actionAfterExtraction()
                 }
-                _training_Data_Document.value = data
-                // Function to execute after data extraction
-                actionAfterExtraction()
-            }
-            .addOnFailureListener { exception ->
-                Log.w("TAG", "ERROR", exception)
-            }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "ERROR", exception)
+                }
+        }
     }
 
+    /**
+     * Extract single training plan
+     */
     fun extractDataTraining(actionAfterExtraction: () -> Unit){
         if(_training_Data_Document.value == null)
             return
-        if (trainingPlanId != -1 && _training_Data_Document.value!!.size > trainingPlanId) {
+        if (firebaseAuth.currentUser != null && trainingPlanId != -1 && _training_Data_Document.value!!.size > trainingPlanId) {
 
             db.collection(firebaseAuth.currentUser!!.uid)
                 .document(_training_Data_Document.value!![trainingPlanId])
@@ -156,7 +171,7 @@ class GymViewModel : ViewModel() {
                     actionAfterExtraction()
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("ERROR TAG", "ERROR : $exception")
+                    Log.e(TAG, "ERROR : $exception")
                 }
         }
     }

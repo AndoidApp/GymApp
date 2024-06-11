@@ -66,7 +66,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/included_toolbar"
-        app:srcCompat="@drawable/jesusgymbro" />
+        app:srcCompat="@drawable/jesusgymbro"
+        android:contentDescription="@string/welcome_picture" />
 
     <Button
         android:id="@+id/btn_login"

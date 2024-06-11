@@ -231,6 +231,7 @@ class TrainingFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+
                 // Back to home
                 navController.navigate(R.id.action_trainingFragment_to_homeFragment)
             }

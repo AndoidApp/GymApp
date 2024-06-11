@@ -173,6 +173,7 @@ class AccountFragment : Fragment() {
             viewModel.updatePhotoUrl(uri)
         }
 
+
         // Push data to viewModel
         viewModel.updatePersonalData(personalDataUpdated)
     }
@@ -186,18 +187,19 @@ class AccountFragment : Fragment() {
             .addOnSuccessListener {
                 // Toast.makeText(requireContext(), "Image uploaded!", Toast.LENGTH_SHORT).show()
                 fileRef.downloadUrl.addOnSuccessListener { uri ->
-                    firebaseAuth.currentUser!!
-                        .updateProfile(userProfileChangeRequest {
-                            photoUri = Uri.parse(uri.toString())
-                        })
-                        .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d(MainActivity.TAG, "User profile updated.")
-                        }
+                        firebaseAuth.currentUser!!
+                            .updateProfile(userProfileChangeRequest {
+                                photoUri = Uri.parse(uri.toString())
+                            })
+                            .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Log.d(MainActivity.TAG, "User profile updated.")
+                            }
                     }
                 }
             }
-            .addOnFailureListener {
+            .addOnFailureListener { e ->
+                Log.e(MainActivity.TAG, "ERROR", e)
                 Toast.makeText(requireContext(), resources.getString(R.string.account_fragment_image_error), Toast.LENGTH_SHORT).show()
             }
     }

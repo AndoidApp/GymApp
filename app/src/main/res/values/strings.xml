@@ -15,4 +15,22 @@
     <string name="account_fragment_image_error">Image upload failed</string>
     <string name="home_fragment_alarm_set">Alarm set successfully</string>
     <string name="home_fragment_alarm_cancelled">Alarm cancelled</string>
+    <string name="profile_picture_description">Profile picture</string>
+    <string name="welcome_picture">Welcome picture</string>
+    <string name="name">Name</string>
+    <string name="username">Username</string>
+    <string name="dd_mm_yyyy">dd-mm-yyyy</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="save">SAVE</string>
+    <string name="account">ACCOUNT</string>
+    <string name="name_lower">name</string>
+    <string name="username_lower">username</string>
+    <string name="sex_lower">sex</string>
+    <string name="edit">EDIT</string>
+    <string name="sign_out">SIGN OUT</string>
+    <string name="training_plans">TRAINING PLANS</string>
+    <string name="add">ADD</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="no_training_plans">No training plans here</string>
 </resources>

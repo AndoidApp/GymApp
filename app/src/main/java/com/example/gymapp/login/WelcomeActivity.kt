@@ -49,7 +49,7 @@ class WelcomeActivity : AppCompatActivity() {
             // Choose authentication providers
             val providers = arrayListOf(
                 AuthUI.IdpConfig.EmailBuilder().build(),
-                // TODO AuthUI.IdpConfig.GoogleBuilder().build(),
+                // AuthUI.IdpConfig.GoogleBuilder().build(),
                 AuthUI.IdpConfig.AnonymousBuilder().build()
             )
 

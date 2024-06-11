@@ -37,10 +37,11 @@ data class DBTrainingPlan(var exercise: MutableList<String> = mutableListOf(), v
                           var reps: MutableList<Int> = mutableListOf(), var weight: MutableList<Int> = mutableListOf()){
     fun getHashMapTraining(): HashMap<String, List<Any>> {
         return hashMapOf(
-        "Exercise" to exercise,
-        "Set" to set_number,
-        "Reps" to reps,
-        "Weight" to weight)
+            "Exercise" to exercise,
+            "Set" to set_number,
+            "Reps" to reps,
+            "Weight" to weight
+        )
     }
 }
 

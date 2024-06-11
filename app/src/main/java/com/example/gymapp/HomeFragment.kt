@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
         val navController = Navigation.findNavController(view)
 
         viewModel.extractDocument{
-            // Handles the case in which training plans are present
+            // Handle the situation when there are training plans
             if (viewModel.training_Data_Document.value?.isNotEmpty() ?: false) {
                 binding.homeFragment.removeView(binding.infoTrainingEmpty)
 
@@ -118,7 +118,7 @@ class HomeFragment : Fragment() {
                 row.gravity = Gravity.CENTER
                 viewModel.trainingPlanContainer.clear()
                 var i = 0
-                // Iterate all training plans
+                // Iterate on all training plans
                 for (element in viewModel.training_Data_Document.value!!) {
                     val textView = TextView(requireContext())
                     textView.text = element
@@ -128,7 +128,7 @@ class HomeFragment : Fragment() {
                     // Add the training plan to training Plan Container
                     viewModel.trainingPlanContainer.add(textView)
                     i++
-                    // Displays no more than 3 training plans on the same row
+                    // Display no more than 3 training plans on the same row
                     if (i == 3){
                         layout.addView(row)
                         row = TableRow(requireContext())
@@ -138,10 +138,10 @@ class HomeFragment : Fragment() {
                 layout.addView(row)
             }
             else{
-                binding.infoTrainingEmpty.text = "No training plans here"
+                binding.infoTrainingEmpty.text = resources.getString(R.string.no_training_plans)
             }
 
-            // Iterate all training plans
+            // Iterate on all training plans
             for (element in viewModel.trainingPlanContainer){
                 // Manage clicks on training plan
                 element.setOnClickListener {

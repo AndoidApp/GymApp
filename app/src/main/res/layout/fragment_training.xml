@@ -31,11 +31,13 @@
                 android:id="@+id/txt"
                 android:layout_width="398dp"
                 android:layout_height="match_parent"
-                android:hint="Enter Name"
+                android:hint="@string/enter_name"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textSize="20dp"
-                android:textStyle="bold">
+                android:textStyle="bold"
+                android:autofillHints=""
+                android:inputType="text">
 
             </EditText>
 

@@ -18,7 +18,8 @@
         app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.02"
-        app:srcCompat="@drawable/charles_leclerc" />
+        app:srcCompat="@drawable/charles_leclerc"
+        android:contentDescription="@string/profile_picture_description" />
 
     <EditText
         android:id="@+id/editName"
@@ -26,11 +27,12 @@
         android:layout_height="48dp"
         android:layout_marginTop="30dp"
         android:ems="10"
-        android:hint="Name"
+        android:hint="@string/name"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editImg" />
+        app:layout_constraintTop_toBottomOf="@+id/editImg"
+        android:autofillHints="AUTOFILL_HINT_NAME" />
 
     <EditText
         android:id="@+id/editUsername"
@@ -38,11 +40,12 @@
         android:layout_height="48dp"
         android:layout_marginTop="30dp"
         android:ems="10"
-        android:hint="Username"
+        android:hint="@string/username"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editName" />
+        app:layout_constraintTop_toBottomOf="@+id/editName"
+        android:autofillHints="AUTOFILL_HINT_USERNAME" />
 
     <TextView
         android:id="@+id/editDateBirth"
@@ -50,7 +53,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="30dp"
         android:ems="10"
-        android:hint="dd-mm-yyyy"
+        android:hint="@string/dd_mm_yyyy"
         android:gravity="center"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,14 +75,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="Male" />
+            android:text="@string/male" />
 
         <RadioButton
             android:id="@+id/editSexFemale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="Female" />
+            android:text="@string/female" />
     </RadioGroup>
 
     <Button
@@ -88,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:backgroundTint="@color/primaryOrange"
-        android:text="SAVE"
+        android:text="@string/save"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
