@@ -1,11 +1,14 @@
 package com.example.gymapp
 
+/**
+ * Sex enumeration
+ */
 enum class Sex(val displayName: String) {
     MALE("MALE"), FEMALE("FEMALE")
 }
 
 /**
- *
+ * Data class to define and handle user's personal data information
  */
 data class DBPersonalData(val name: String = DEFAULT_NAME,
                           val username: String = DEFAULT_USERNAME,
@@ -48,11 +51,10 @@ class DBManager {
     companion object {
         const val PERSONAL_DATA_DOCUMENT_NAME = "personal_data"
         const val TRAINING_DATA_DOCUMENT_NAME = "training Plans"
+        const val PROFILE_PICS_FOLDER = "profile-pics"
 
         var training_Data_Document : MutableList<String> = mutableListOf()
 
         const val INTERNAL_FILENAME = "gym_app.txt"
-
     }
-
 }

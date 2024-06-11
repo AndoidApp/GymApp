@@ -15,50 +15,27 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
-
+/**
+ * Activity used to allow user authentication through FirebaseUI Auth
+ */
 class WelcomeActivity : AppCompatActivity() {
+
+    companion object {
+        const val TAG = "FirebaseAuth"
+        const val EXTRA_USER_NAME = "user"
+    }
 
     /* DB */
     private val db = Firebase.firestore
     private val firebaseAuth = FirebaseAuth.getInstance()
 
-    private val viewModel: GymViewModel by viewModels()
     private lateinit var binding : ActivityWelcomeBinding
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract(),
     ) { res ->
         this.onSignInResult(res)
-    }
-
-    private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult?) {
-        if (result != null) {
-            val response = result.idpResponse
-            if (result.resultCode == RESULT_OK) {
-
-                // Successfully signed in
-                val user = firebaseAuth.currentUser // : FirebaseUser
-
-                /* TODO : look for a good way to save birthDate: Date */
-                if (response?.isNewUser == true) {
-                    val defaultPersonalData = DBPersonalData(name = user?.displayName ?: DBPersonalData.DEFAULT_NAME) // default personal data values
-                    db.collection(user!!.uid)
-                        .document(DBManager.PERSONAL_DATA_DOCUMENT_NAME)
-                        .set(defaultPersonalData.getHashMap())
-                }
-
-                // TODO => set viewmodel here (efficiency), not in mainActivity, there is another DB query there :(
-
-                startMainActivity()
-
-            } else {
-                // LOGIN FAILED (toast, redirect to login page again, ...)
-                Log.e("FirebaseAuth", "Login ERROR")
-            }
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +63,7 @@ class WelcomeActivity : AppCompatActivity() {
                 signInLauncher.launch(signInIntent)
             }
         } else {
+            // User already signed in, load main activity
             startMainActivity()
         }
     }
@@ -93,15 +71,44 @@ class WelcomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (firebaseAuth.currentUser != null)
-            startMainActivity()
+            startMainActivity() // User already signed in, load main activity
     }
+
+    /**
+     * Handle sign in result
+     */
+    private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult?) {
+        if (result != null) {
+            val response = result.idpResponse
+            if (result.resultCode == RESULT_OK) {
+
+                // Successfully signed in
+                val user = firebaseAuth.currentUser // : FirebaseUser
+
+                // If the user is a new user, then set default personal data to DB
+                if (response?.isNewUser == true) {
+                    val defaultPersonalData = DBPersonalData(name = user?.displayName ?: DBPersonalData.DEFAULT_NAME)
+                    db.collection(user!!.uid)
+                        .document(DBManager.PERSONAL_DATA_DOCUMENT_NAME)
+                        .set(defaultPersonalData.getHashMap())
+                }
+
+                startMainActivity()
+
+            } else {
+                // LOGIN FAILED
+                Log.e(TAG, "ERROR | SignIn result")
+            }
+        }
+    }
+
 
     /**
      * Start MainActivity putting logged user data as intent extra
      */
     private fun startMainActivity() {
         val intentMainActivity = Intent(this, MainActivity::class.java)
-        intentMainActivity.putExtra("user", firebaseAuth.currentUser)
+        intentMainActivity.putExtra(EXTRA_USER_NAME, firebaseAuth.currentUser)
         startActivity(intentMainActivity)
     }
 }

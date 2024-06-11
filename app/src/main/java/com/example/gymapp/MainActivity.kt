@@ -41,24 +41,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        /*
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-
-        toolbar.setNavigationOnClickListener {
-            val url = "https://github.com/AndoidApp/GymApp"
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(url)
-            startActivity(intent)
-        }
-        */
-
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        /* TOOLBAR */
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.title = ""
 
@@ -75,7 +64,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.viewTraining = false
         val navController = findNavController(R.id.nav_host_fragment)
 
-        // TODO : something weird when going back to home (from training fragment) after having clicked on "ADD" in home fragment
+        // TODO : something weird when going back to home (from training fragment)
+        //  after having clicked on "ADD" in home fragment
         Log.d(TAG, item.onNavDestinationSelected(navController).toString())
         Log.d(TAG, "${item.itemId} ${item.title}")
         Log.d(TAG, "${R.id.homeFragment}")
@@ -88,8 +78,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name : CharSequence = "gym_appReminderChannel"
-            val description = "Channel for Gym App"
+            val name : CharSequence = AlarmReceiver.NOTIFICATION_CHANNEL_NAME
+            val description = AlarmReceiver.NOTIFICATION_CHANNEL_DESCRIPTION
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(AlarmReceiver.CHANNEL_ID, name, importance)
             channel.description = description

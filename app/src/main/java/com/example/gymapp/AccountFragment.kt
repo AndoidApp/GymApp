@@ -28,10 +28,10 @@ import java.util.Calendar
 import java.util.Date
 
 
+private const val s = "Account updated!"
+
 /**
- * A simple [Fragment] subclass.
- * Use the [AccountFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * Account fragment to manage customization of personal information (account data)
  */
 class AccountFragment : Fragment() {
 
@@ -80,16 +80,9 @@ class AccountFragment : Fragment() {
                 },
                 year, month, day
             )
-            datePickerDialog.datePicker.maxDate = Date().time
+            datePickerDialog.datePicker.maxDate = Date().time // user cannot be born in the future
             datePickerDialog.show()
         }
-
-        // TODO => not working if editText is used
-        /* binding.editDateBirth.setOnTouchListener { v, event ->
-            { calendar code }
-            true // the listener has consumed the event
-        } */
-
 
         /* PROFILE PICTURE HANDLING */
         var imageUri: Uri? = null
@@ -118,13 +111,13 @@ class AccountFragment : Fragment() {
         val navController = Navigation.findNavController(view)
         binding.editAccountBtnSubmit.setOnClickListener {
             updateUserData(imageUri)
-            Toast.makeText(view.context, "Account updated!", Toast.LENGTH_LONG).show()
+            Toast.makeText(view.context, resources.getString(R.string.account_fragment_updated), Toast.LENGTH_LONG).show()
             navController.navigate(R.id.action_accountFragment_to_homeFragment)
         }
     }
 
     /**
-     *
+     * Load user data from DB to text views, ... (through Observer method)
      */
     private fun setUserData() {
         viewModel.userPersonalData.observe(viewLifecycleOwner, Observer {
@@ -151,13 +144,16 @@ class AccountFragment : Fragment() {
             Picasso.get().load(uri)
                 .transform(CropSquareTransformation())
                 .fit().centerInside()
-                //.rotate(90F)
+                .rotate(90F)
                 .error(R.drawable.charles_leclerc)
                 .placeholder(R.drawable.avatar_default)
                 .into(binding.editImg)
         }
     }
 
+    /**
+     * Update new user data on the DB
+     */
     private fun updateUserData(imageUri: Uri?) {
         val personalDataUpdated = DBPersonalData(
             binding.editName.text.toString(),
@@ -166,10 +162,11 @@ class AccountFragment : Fragment() {
             when (binding.editSex.checkedRadioButtonId) {
                 R.id.editSexMale -> Sex.MALE
                 R.id.editSexFemale -> Sex.FEMALE
-                else -> { Sex.MALE}
+                else -> { Sex.MALE} // as default
             }
         )
 
+        // Push data to DB
         db.collection(firebaseAuth.currentUser!!.uid)
             .document(DBManager.PERSONAL_DATA_DOCUMENT_NAME)
             .set(personalDataUpdated.getHashMap())
@@ -178,6 +175,7 @@ class AccountFragment : Fragment() {
             viewModel.updatePhotoUrl(uri)
         }
 
+        // Push data to viewModel
         viewModel.updatePersonalData(personalDataUpdated)
     }
 
@@ -185,7 +183,7 @@ class AccountFragment : Fragment() {
     Upload image to firebase storage
      */
     private fun uploadImageToFirebase(imageUri: Uri) {
-        val fileRef = storageReference.child("profile-pics/${firebaseAuth.currentUser?.uid}.jpg")
+        val fileRef = storageReference.child("${DBManager.PROFILE_PICS_FOLDER}/${firebaseAuth.currentUser?.uid}.jpg")
         fileRef.putFile(imageUri)
             .addOnSuccessListener {
                 // Toast.makeText(requireContext(), "Image uploaded!", Toast.LENGTH_SHORT).show()
@@ -202,7 +200,7 @@ class AccountFragment : Fragment() {
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(requireContext(), "Image upload failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), resources.getString(R.string.account_fragment_image_error), Toast.LENGTH_SHORT).show()
             }
     }
 }
