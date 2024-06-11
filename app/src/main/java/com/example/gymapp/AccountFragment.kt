@@ -28,8 +28,6 @@ import java.util.Calendar
 import java.util.Date
 
 
-private const val s = "Account updated!"
-
 /**
  * Account fragment to manage customization of personal information (account data)
  */

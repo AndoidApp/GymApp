@@ -155,13 +155,6 @@ class TrainingFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-/*
-        trainingData.exercise = viewModel.trainingData.value?.exercise ?: mutableListOf<String>()
-        trainingData.set_number = viewModel.trainingData.value?.set_number ?: mutableListOf<Int>()
-        trainingData.reps = viewModel.trainingData.value?.reps ?: mutableListOf<Int>()
-        trainingData.weight = viewModel.trainingData.value?.weight ?: mutableListOf<Int>()
-
- */
     }
 
     override fun onCreateView(
