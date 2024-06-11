@@ -98,10 +98,16 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /*
+     * input: view
+     * output: none
+     * note: extracts the data from the database and displays the training plans in the appropriate section
+     */
     private fun showTrainingPlans(view: View){
         val navController = Navigation.findNavController(view)
 
         viewModel.extractDocument{
+            // Handles the case in which training plans are present
             if (viewModel.training_Data_Document.value?.isNotEmpty() ?: false) {
                 binding.homeFragment.removeView(binding.infoTrainingEmpty)
 
@@ -112,14 +118,17 @@ class HomeFragment : Fragment() {
                 row.gravity = Gravity.CENTER
                 viewModel.trainingPlanContainer.clear()
                 var i = 0
+                // Iterate all training plans
                 for (element in viewModel.training_Data_Document.value!!) {
                     val textView = TextView(requireContext())
                     textView.text = element
                     textView.setPadding(0,0,0,50)
 
                     row.addView(textView)
+                    // Add the training plan to training Plan Container
                     viewModel.trainingPlanContainer.add(textView)
                     i++
+                    // Displays no more than 3 training plans on the same row
                     if (i == 3){
                         layout.addView(row)
                         row = TableRow(requireContext())
@@ -132,10 +141,14 @@ class HomeFragment : Fragment() {
                 binding.infoTrainingEmpty.text = "No training plans here"
             }
 
+            // Iterate all training plans
             for (element in viewModel.trainingPlanContainer){
+                // Manage clicks on training plan
                 element.setOnClickListener {
+                    // Extract the position of the training Plan from the training Plan Container to find the information in the DB if necessary
                     viewModel.trainingPlanId = viewModel.trainingPlanContainer.indexOf(it)
-                    Log.d("Tag", "${viewModel.trainingPlanContainer}")
+
+                    // View the training plan
                     if (viewModel.trainingPlanId != -1){
                         viewModel.viewTraining = true
                         navController.navigate(R.id.action_homeFragment_to_trainingFragment)
