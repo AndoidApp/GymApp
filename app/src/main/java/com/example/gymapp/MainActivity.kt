@@ -73,8 +73,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.viewTraining = false
         val navController = findNavController(R.id.nav_host_fragment)
 
-        // TODO : something weird when going back to home (from training fragment)
-        //  after having clicked on "ADD" in home fragment
         Log.d(TAG, item.onNavDestinationSelected(navController).toString())
         Log.d(TAG, "${item.itemId} ${item.title}")
         Log.d(TAG, "${R.id.homeFragment}")
