@@ -98,46 +98,47 @@ class GymViewModel : ViewModel() {
             .get()
             .addOnSuccessListener { documents ->
                 val data : MutableList<String> = mutableListOf()
+
+                // Get the training plans
                 for (document in documents) {
                     if (document.id != "personal_data") {
                         data.add(document.id)
-
                     }
-                    Log.d("Documenti", "${data}")
                 }
                 _training_Data_Document.value = data
+                // Function to execute after data extraction
                 actionAfterExtraction()
             }
             .addOnFailureListener { exception ->
-                Log.w("TAG", "Errore nel recupero dei documenti", exception)
+                Log.w("TAG", "ERROR", exception)
             }
     }
+
     fun extractDataTraining(actionAfterExtraction: () -> Unit){
         if(_training_Data_Document.value == null)
             return
         if (trainingPlanId != -1 && _training_Data_Document.value!!.size > trainingPlanId) {
-            Log.d("Nell'if:",  "${trainingPlanId} -> ${DBManager.training_Data_Document.size }")
+
             db.collection(firebaseAuth.currentUser!!.uid)
                 .document(_training_Data_Document.value!![trainingPlanId])
                 .get()
                 .addOnSuccessListener { document ->
-                    // [ personal_data , training_plans ]
                     val data = document.data
+                    val trainingData = DBTrainingPlan()
 
-                    var trainingData = DBTrainingPlan()
-
+                    // Get the training plan data
                     trainingData.exercise = data?.get("Exercise") as MutableList<String>
                     trainingData.set_number = data["Set"] as MutableList<Int>
                     trainingData.reps = data["Reps"] as MutableList<Int>
                     trainingData.weight = data["Weight"] as MutableList<Int>
-                    //trainingData = document.toObject(DBTrainingPlan::class.java)!!
 
                     _trainingData.value = trainingData
-                    Log.d("Dati palestra", "$trainingData")
+
+                    // Function to execute after data extraction
                     actionAfterExtraction()
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("TAG di errore", "Errore : $exception")
+                    Log.e("ERROR TAG", "ERROR : $exception")
                 }
         }
     }
