@@ -52,6 +52,7 @@ class DBManager {
     companion object {
         const val PERSONAL_DATA_DOCUMENT_NAME = "personal_data"
         const val PROFILE_PICS_FOLDER = "profile-pics"
+        const val PROFILE_PIC_EXTENSION = "jpg"
 
         const val INTERNAL_FILENAME = "gym_app.txt"
     }

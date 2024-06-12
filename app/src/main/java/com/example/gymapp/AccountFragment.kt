@@ -182,7 +182,7 @@ class AccountFragment : Fragment() {
     Upload image to firebase storage
      */
     private fun uploadImageToFirebase(imageUri: Uri) {
-        val fileRef = storageReference.child("${DBManager.PROFILE_PICS_FOLDER}/${firebaseAuth.currentUser?.uid}.jpg")
+        val fileRef = storageReference.child("${DBManager.PROFILE_PICS_FOLDER}/${firebaseAuth.currentUser?.uid}.${DBManager.PROFILE_PIC_EXTENSION}")
         fileRef.putFile(imageUri)
             .addOnSuccessListener {
                 // Toast.makeText(requireContext(), "Image uploaded!", Toast.LENGTH_SHORT).show()
