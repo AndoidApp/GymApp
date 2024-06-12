@@ -187,6 +187,7 @@ class AccountFragment : Fragment() {
             .addOnSuccessListener {
                 // Toast.makeText(requireContext(), "Image uploaded!", Toast.LENGTH_SHORT).show()
                 fileRef.downloadUrl.addOnSuccessListener { uri ->
+                    if (firebaseAuth.currentUser != null) {
                         firebaseAuth.currentUser!!
                             .updateProfile(userProfileChangeRequest {
                                 photoUri = Uri.parse(uri.toString())
@@ -195,6 +196,7 @@ class AccountFragment : Fragment() {
                             if (task.isSuccessful) {
                                 Log.d(MainActivity.TAG, "User profile updated.")
                             }
+                    }
                     }
                 }
             }

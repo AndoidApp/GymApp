@@ -24,6 +24,10 @@ import com.example.gymapp.login.WelcomeActivity
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropSquareTransformation
 import java.util.Calendar
@@ -36,6 +40,9 @@ class HomeFragment : Fragment() {
         fun newInstance() = HomeFragment()
         const val ID = "Home"
     }
+
+    /** DB */
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private lateinit var binding : FragmentHomeBinding
     private val viewModel: GymViewModel by activityViewModels()
@@ -58,6 +65,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navController = Navigation.findNavController(view)
+
+        if (firebaseAuth.currentUser == null) {
+            val intentWelcomeActivity = Intent(requireContext(), WelcomeActivity::class.java)
+            startActivity(intentWelcomeActivity)
+        }
 
         /* SHOW USER INFO */
         showUserData()
